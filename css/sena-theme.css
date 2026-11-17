@@ -798,6 +798,153 @@ button, a, input, select, label, .flash-card, .accordion-header {
   text-decoration: underline;
 }
 
+/* Bloques de descarga rápida en Sidebar */
+.sidebar-downloads {
+  margin-top: 14px;
+  padding: 12px 10px 4px;
+  border-top: 1px solid var(--border-color);
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.sidebar-dl-title {
+  font-size: 0.72rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--sena-blue);
+  margin-bottom: 2px;
+}
+
+[data-theme="dark"] .sidebar-dl-title {
+  color: var(--sena-cyan);
+}
+
+.sidebar-dl-link {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 7px 10px;
+  border-radius: var(--radius-sm);
+  background: var(--bg-surface);
+  border: 1px solid var(--border-color);
+  color: var(--text-primary);
+  font-size: 0.78rem;
+  font-weight: 600;
+  text-decoration: none;
+  cursor: pointer;
+  font-family: inherit;
+  text-align: left;
+  transition: background-color 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+}
+
+.sidebar-dl-link:hover {
+  background: var(--sena-green-subtle);
+  border-color: var(--sena-green-dark);
+  color: var(--sena-green-dark);
+}
+
+[data-theme="dark"] .sidebar-dl-link:hover {
+  color: var(--sena-white);
+}
+
+/* Barra fija/sticky paso a paso siempre visible (.step-nav-bar) */
+.step-nav-bar {
+  position: sticky;
+  bottom: 12px;
+  z-index: 88;
+  margin-top: 28px;
+  background: rgba(255, 255, 255, 0.94);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1.5px solid var(--border-color);
+  border-top: 3px solid var(--sena-green);
+  border-radius: var(--radius-md);
+  padding: 10px 18px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  box-shadow: var(--shadow-float);
+  transition: background-color 0.2s ease, border-color 0.2s ease;
+}
+
+[data-theme="dark"] .step-nav-bar {
+  background: rgba(26, 35, 31, 0.95);
+}
+
+html.a11y-contraste .step-nav-bar {
+  background: #000000 !important;
+  border: 2px solid #FFFFFF !important;
+}
+
+.step-nav-status {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
+  flex: 1;
+}
+
+.step-counter-label {
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--sena-blue);
+  font-variant-numeric: tabular-nums;
+  text-align: center;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 100%;
+}
+
+[data-theme="dark"] .step-counter-label {
+  color: var(--sena-cyan);
+}
+
+.step-dots {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.step-dot {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  border: 1px solid var(--border-color);
+  background: var(--bg-surface);
+  cursor: pointer;
+  padding: 0;
+  transition: background-color 0.15s ease, transform 0.15s ease, width 0.15s ease;
+}
+
+.step-dot.visited {
+  background: rgba(57, 169, 0, 0.45);
+  border-color: var(--sena-green-dark);
+}
+
+.step-dot.active {
+  width: 22px;
+  border-radius: 999px;
+  background: var(--sena-green-dark);
+  border-color: var(--sena-green);
+}
+
+@media (max-width: 680px) {
+  .step-nav-bar {
+    padding: 8px 10px;
+    gap: 8px;
+  }
+  .step-dots {
+    display: none;
+  }
+}
+
 /* Responsive */
 @media (max-width: 992px) {
   #menuToggle {

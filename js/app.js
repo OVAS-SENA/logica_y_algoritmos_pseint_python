@@ -40,7 +40,27 @@
     var themeToggle = document.getElementById("themeToggle");
     var menuToggle = document.getElementById("menuToggle");
     var sidebar = document.querySelector(".sidebar");
+    var stepPrevBtn = document.getElementById("stepPrevBtn");
+    var stepNextBtn = document.getElementById("stepNextBtn");
+    var stepCounterLabel = document.getElementById("stepCounterLabel");
+    var stepDotsContainer = document.getElementById("stepDotsContainer");
     var primeraCarga = true;
+
+    var STEPS = [
+      { id: "intro", label: "Introducción y Ficha" },
+      { id: "u1_logica", label: "Unidad 1 · Lógica y Operadores" },
+      { id: "u2_algoritmos_condicionales", label: "Unidad 2 · Algoritmos y Condicionales" },
+      { id: "u3_ciclicas_traza", label: "Unidad 3 · Ciclos y Traza" },
+      { id: "u4_funciones", label: "Unidad 4 · Funciones y Memoria" },
+      { id: "u5_arreglos", label: "Unidad 5 · Arreglos y Matrices" },
+      { id: "u6_archivos", label: "Unidad 6 · Archivos CSV y Errores" },
+      { id: "u7_reto_comparador", label: "Unidad 7 · Reto y PSeInt ↔ Python" },
+      { id: "repaso", label: "Sección 8 · Repaso y Chequeo IE" },
+      { id: "evaluacion", label: "Sección 9 · Evaluación y Constancia" },
+      { id: "sintesis_glosario", label: "Sección 10 · Síntesis y Glosario" },
+      { id: "complementario_software", label: "Sección 11 · Material Compl. y Software" },
+      { id: "creditos", label: "Sección 12 · Referencias y Créditos" }
+    ];
 
     var savedVisited = safeGet("ga3_ova_visitadas");
     var visited;
@@ -94,9 +114,101 @@
       });
     }
 
-    /* ---------------- Progreso y Navegación ---------------- */
+    /* ---------------- Progreso, Scroll-Reveal y Navegación ---------------- */
+    var revealObserver = null;
+    if ("IntersectionObserver" in window) {
+      revealObserver = new IntersectionObserver(function (entries) {
+        entries.forEach(function (entry) {
+          if (entry.isIntersecting) {
+            entry.target.classList.add("is-visible");
+            revealObserver.unobserve(entry.target);
+          }
+        });
+      }, { threshold: 0.06, rootMargin: "0px 0px -24px 0px" });
+    }
+
+    function activarAnimacionesSeccion(sec) {
+      if (!sec) return;
+      var noAnim = (window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches) ||
+        document.documentElement.classList.contains("a11y-sin-animaciones");
+      var nodos = sec.querySelectorAll(".sena-card, .photo-card, .hero-banner, .reveal-item");
+      nodos.forEach(function (el, idx) {
+        if (!el.classList.contains("reveal-item")) {
+          el.classList.add("reveal-item", idx % 2 === 0 ? "reveal-up" : "reveal-scale");
+        }
+        el.style.transitionDelay = noAnim ? "0ms" : Math.min(idx * 55, 220) + "ms";
+        if (noAnim || !revealObserver) {
+          el.classList.add("is-visible");
+        } else {
+          el.classList.remove("is-visible");
+          revealObserver.observe(el);
+          var rect = el.getBoundingClientRect();
+          if (rect.top < window.innerHeight * 0.95) {
+            requestAnimationFrame(function () { el.classList.add("is-visible"); });
+          }
+        }
+      });
+    }
+
+    function construirPuntosPasoAPaso() {
+      if (!stepDotsContainer) return;
+      stepDotsContainer.innerHTML = "";
+      STEPS.forEach(function (st, idx) {
+        var dot = document.createElement("button");
+        dot.type = "button";
+        dot.className = "step-dot";
+        dot.setAttribute("aria-label", "Ir al paso " + (idx + 1) + ": " + st.label);
+        dot.title = st.label;
+        dot.dataset.stepTarget = st.id;
+        dot.addEventListener("click", function () { navigateTo(st.id, true); });
+        stepDotsContainer.appendChild(dot);
+      });
+    }
+    construirPuntosPasoAPaso();
+
+    function actualizarBarraPasoAPaso(secId) {
+      var idx = STEPS.findIndex(function (s) { return s.id === secId; });
+      if (idx < 0) idx = 0;
+      var cur = STEPS[idx];
+      if (stepCounterLabel) {
+        stepCounterLabel.textContent = "Paso " + (idx + 1) + " de " + STEPS.length + " · " + cur.label;
+      }
+      if (stepPrevBtn) {
+        stepPrevBtn.disabled = idx === 0;
+        if (idx > 0) {
+          stepPrevBtn.dataset.stepId = STEPS[idx - 1].id;
+          stepPrevBtn.title = "Anterior: " + STEPS[idx - 1].label;
+        }
+      }
+      if (stepNextBtn) {
+        stepNextBtn.disabled = idx >= STEPS.length - 1;
+        if (idx < STEPS.length - 1) {
+          stepNextBtn.dataset.stepId = STEPS[idx + 1].id;
+          stepNextBtn.title = "Siguiente: " + STEPS[idx + 1].label;
+        }
+      }
+      if (stepDotsContainer) {
+        stepDotsContainer.querySelectorAll(".step-dot").forEach(function (dot) {
+          var id = dot.dataset.stepTarget;
+          dot.classList.toggle("active", id === secId);
+          dot.classList.toggle("visited", visited.has(id) && id !== secId);
+        });
+      }
+    }
+
+    if (stepPrevBtn) {
+      stepPrevBtn.addEventListener("click", function () {
+        if (!stepPrevBtn.disabled && stepPrevBtn.dataset.stepId) navigateTo(stepPrevBtn.dataset.stepId, true);
+      });
+    }
+    if (stepNextBtn) {
+      stepNextBtn.addEventListener("click", function () {
+        if (!stepNextBtn.disabled && stepNextBtn.dataset.stepId) navigateTo(stepNextBtn.dataset.stepId, true);
+      });
+    }
+
     function updateProgress() {
-      var total = sections.length || 12;
+      var total = sections.length || STEPS.length;
       var count = Math.min(total, visited.size);
       var pct = Math.round((count / total) * 100);
       if (progressBar) progressBar.style.width = pct + "%";
@@ -142,6 +254,8 @@
 
       visited.add(secId);
       updateProgress();
+      actualizarBarraPasoAPaso(secId);
+      activarAnimacionesSeccion(targetSection);
 
       if (window.SenaA11y) {
         if (window.SenaA11y.detenerVoz) window.SenaA11y.detenerVoz();
@@ -443,6 +557,130 @@
         });
       });
     }
+
+    /* ---------------- Tabs interactivas (.sena-tabs) ---------------- */
+    document.querySelectorAll(".sena-tabs").forEach(function (wrap) {
+      var btns = Array.prototype.slice.call(wrap.querySelectorAll(".sena-tab-btn"));
+      var panels = Array.prototype.slice.call(wrap.querySelectorAll(".sena-tab-panel"));
+      function activar(idx) {
+        btns.forEach(function (b, i) { b.setAttribute("aria-selected", i === idx ? "true" : "false"); });
+        panels.forEach(function (p, i) { p.classList.toggle("active", i === idx); });
+      }
+      btns.forEach(function (btn, idx) {
+        btn.addEventListener("click", function () { activar(idx); });
+        btn.addEventListener("keydown", function (e) {
+          var nxt = e.key === "ArrowRight" ? (idx + 1) % btns.length
+            : (e.key === "ArrowLeft" ? (idx - 1 + btns.length) % btns.length
+            : (e.key === "Home" ? 0 : (e.key === "End" ? btns.length - 1 : -1)));
+          if (nxt < 0) return;
+          e.preventDefault();
+          activar(nxt);
+          btns[nxt].focus();
+        });
+      });
+    });
+
+    /* ---------------- Carrusel / Slider paso a paso (.sena-slider) ---------------- */
+    document.querySelectorAll(".sena-slider").forEach(function (slider) {
+      var slides = Array.prototype.slice.call(slider.querySelectorAll(".sena-slide"));
+      var prev = slider.querySelector(".sena-slider-prev");
+      var next = slider.querySelector(".sena-slider-next");
+      var dotsWrap = slider.querySelector(".sena-slider-dots");
+      var status = slider.querySelector(".sena-slider-status");
+      var idx = 0;
+
+      if (dotsWrap && !dotsWrap.children.length) {
+        slides.forEach(function (_s, i) {
+          var dot = document.createElement("button");
+          dot.type = "button";
+          dot.className = "sena-slider-dot";
+          dot.setAttribute("aria-label", "Ir al paso " + (i + 1));
+          dot.addEventListener("click", function () { irSlide(i); });
+          dotsWrap.appendChild(dot);
+        });
+      }
+
+      function irSlide(nuevo) {
+        idx = Math.max(0, Math.min(slides.length - 1, nuevo));
+        slides.forEach(function (s, i) { s.classList.toggle("active", i === idx); });
+        if (dotsWrap) {
+          Array.prototype.forEach.call(dotsWrap.children, function (d, i) {
+            d.classList.toggle("active", i === idx);
+          });
+        }
+        if (status) status.textContent = (idx + 1) + " / " + slides.length;
+        if (prev) prev.disabled = idx === 0;
+        if (next) next.disabled = idx >= slides.length - 1;
+      }
+
+      if (prev) prev.addEventListener("click", function () { irSlide(idx - 1); });
+      if (next) next.addEventListener("click", function () { irSlide(idx + 1); });
+      irSlide(0);
+    });
+
+    /* ---------------- Modals de profundización (<dialog class="sena-info-modal">) ---------------- */
+    var origenModal = null;
+    function cerrarInfoModal(dlg) {
+      if (!dlg) return;
+      try {
+        if (typeof dlg.close === "function" && dlg.open) dlg.close();
+        else dlg.removeAttribute("open");
+      } catch (e) {
+        dlg.removeAttribute("open");
+      }
+      if (origenModal && origenModal.focus) origenModal.focus();
+      origenModal = null;
+    }
+
+    document.querySelectorAll("[data-modal-open]").forEach(function (btn) {
+      btn.addEventListener("click", function () {
+        var id = btn.getAttribute("data-modal-open");
+        var dlg = document.getElementById(id);
+        if (!dlg) return;
+        origenModal = document.activeElement;
+        try {
+          if (typeof dlg.showModal === "function") dlg.showModal();
+          else dlg.setAttribute("open", "");
+        } catch (e) {
+          dlg.setAttribute("open", "");
+        }
+      });
+    });
+
+    document.querySelectorAll("dialog.sena-info-modal").forEach(function (dlg) {
+      dlg.querySelectorAll("[data-modal-close]").forEach(function (btn) {
+        btn.addEventListener("click", function () { cerrarInfoModal(dlg); });
+      });
+      dlg.addEventListener("mousedown", function (e) {
+        if (e.target === dlg) cerrarInfoModal(dlg);
+      });
+      dlg.addEventListener("cancel", function (e) {
+        e.preventDefault();
+        cerrarInfoModal(dlg);
+      });
+    });
+
+    /* ---------------- Descarga de copia HTML 100 % offline autocontenida ---------------- */
+    document.querySelectorAll("[data-download-offline]").forEach(function (btn) {
+      btn.addEventListener("click", function () {
+        try {
+          var clone = document.documentElement.cloneNode(true);
+          clone.querySelectorAll("dialog[open]").forEach(function (d) { d.removeAttribute("open"); });
+          var htmlStr = "<!doctype html>\n" + clone.outerHTML;
+          var blob = new Blob([htmlStr], { type: "text/html;charset=utf-8" });
+          var url = URL.createObjectURL(blob);
+          var a = document.createElement("a");
+          a.href = url;
+          a.download = "OVA_GA3_Logica_y_algoritmos_Offline.html";
+          document.body.appendChild(a);
+          a.click();
+          document.body.removeChild(a);
+          setTimeout(function () { URL.revokeObjectURL(url); }, 1000);
+        } catch (err) {
+          window.open("index.html", "_blank");
+        }
+      });
+    });
 
     /* ---------------- Inicio ---------------- */
     navigateTo(location.hash || "#intro", false);

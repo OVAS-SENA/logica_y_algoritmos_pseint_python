@@ -1081,7 +1081,7 @@ html.a11y-foco :focus {
 }
 
 /* Objetivos grandes >= 44 x 44 px (WCAG 2.5.5) */
-html.a11y-objetivos :is(button, .btn, [role="button"], [role="switch"], [role="radio"], [role="tab"], .nav-item, .hero-wb-tab, .glossary-filter-btn, select, input[type="checkbox"], input[type="radio"]) {
+html.a11y-objetivos :is(button:not(.step-dot):not(.sena-slider-dot), .btn, [role="button"], [role="switch"], [role="radio"], [role="tab"], .nav-item, .hero-wb-tab, .glossary-filter-btn, select, input[type="checkbox"], input[type="radio"]) {
   min-height: 44px;
   min-width: 44px;
 }

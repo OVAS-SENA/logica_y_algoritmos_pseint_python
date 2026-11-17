@@ -1,0 +1,65 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="920" height="420" viewBox="0 0 920 420">
+  <rect width="920" height="420" rx="16" fill="#F6F6F6" stroke="#CBD5E1" stroke-width="1.5"/>
+  <rect x="0" y="0" width="920" height="68" rx="16" fill="#00304D"/>
+  <rect x="0" y="48" width="920" height="20" fill="#00304D"/>
+  <rect x="0" y="64" width="920" height="4" fill="#39A900"/>
+  <text x="28" y="33" font-family="Arial, Helvetica, sans-serif" font-size="20" font-weight="bold" fill="#FFFFFF">Ciclo completo de resolución de problemas algorítmicos</text>
+  <text x="28" y="54" font-family="Arial, Helvetica, sans-serif" font-size="13" fill="#50E5F9">Guía 03 · De la situación real al código verificable en PSeInt y Python 3</text>
+  <rect x="24" y="96" width="158" height="175" rx="10" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="1.5"/>
+  <rect x="24" y="96" width="158" height="32" rx="10" fill="#007832"/>
+  <rect x="24" y="116" width="158" height="12" fill="#007832"/>
+  <text x="36" y="117" font-family="Arial, Helvetica, sans-serif" font-size="13.5" font-weight="bold" fill="#FFFFFF">1. Problema real</text>
+  <text x="36" y="150" font-family="Arial, Helvetica, sans-serif" font-size="12" fill="#141A15">Situación del contexto</text>
+  <text x="36" y="170" font-family="Arial, Helvetica, sans-serif" font-size="12" fill="#141A15">Reglas del negocio</text>
+  <text x="36" y="190" font-family="Arial, Helvetica, sans-serif" font-size="12" fill="#141A15">Restricciones de datos</text>
+  <line x1="184" y1="184" x2="197" y2="184" stroke="#007832" stroke-width="2.5"/>
+  <polygon points="204,184 197,179 197,189" fill="#007832"/>
+  <rect x="206" y="96" width="158" height="175" rx="10" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="1.5"/>
+  <rect x="206" y="96" width="158" height="32" rx="10" fill="#00304D"/>
+  <rect x="206" y="116" width="158" height="12" fill="#00304D"/>
+  <text x="218" y="117" font-family="Arial, Helvetica, sans-serif" font-size="13.5" font-weight="bold" fill="#FFFFFF">2. Análisis EPS</text>
+  <text x="218" y="150" font-family="Arial, Helvetica, sans-serif" font-size="12" fill="#141A15">Entradas (tipos)</text>
+  <text x="218" y="170" font-family="Arial, Helvetica, sans-serif" font-size="12" fill="#141A15">Proceso y fórmulas</text>
+  <text x="218" y="190" font-family="Arial, Helvetica, sans-serif" font-size="12" fill="#141A15">Salidas esperadas</text>
+  <line x1="366" y1="184" x2="379" y2="184" stroke="#007832" stroke-width="2.5"/>
+  <polygon points="386,184 379,179 379,189" fill="#007832"/>
+  <rect x="388" y="96" width="158" height="175" rx="10" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="1.5"/>
+  <rect x="388" y="96" width="158" height="32" rx="10" fill="#39A900"/>
+  <rect x="388" y="116" width="158" height="12" fill="#39A900"/>
+  <text x="400" y="117" font-family="Arial, Helvetica, sans-serif" font-size="13.5" font-weight="bold" fill="#000000">3. PSeInt Flexible</text>
+  <text x="400" y="150" font-family="Arial, Helvetica, sans-serif" font-size="12" fill="#141A15">Pseudocódigo limpio</text>
+  <text x="400" y="170" font-family="Arial, Helvetica, sans-serif" font-size="12" fill="#141A15">Índices desde 1</text>
+  <text x="400" y="190" font-family="Arial, Helvetica, sans-serif" font-size="12" fill="#141A15">Sin errores de sintaxis</text>
+  <line x1="548" y1="184" x2="561" y2="184" stroke="#007832" stroke-width="2.5"/>
+  <polygon points="568,184 561,179 561,189" fill="#007832"/>
+  <rect x="570" y="96" width="158" height="175" rx="10" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="1.5"/>
+  <rect x="570" y="96" width="158" height="32" rx="10" fill="#FDC300"/>
+  <rect x="570" y="116" width="158" height="12" fill="#FDC300"/>
+  <text x="582" y="117" font-family="Arial, Helvetica, sans-serif" font-size="13.5" font-weight="bold" fill="#000000">4. Flujo y Traza</text>
+  <text x="582" y="150" font-family="Arial, Helvetica, sans-serif" font-size="12" fill="#141A15">Diagrama PSeInt</text>
+  <text x="582" y="170" font-family="Arial, Helvetica, sans-serif" font-size="12" fill="#141A15">Prueba de escritorio</text>
+  <text x="582" y="190" font-family="Arial, Helvetica, sans-serif" font-size="12" fill="#141A15">Casos límite claros</text>
+  <line x1="730" y1="184" x2="743" y2="184" stroke="#007832" stroke-width="2.5"/>
+  <polygon points="750,184 743,179 743,189" fill="#007832"/>
+  <rect x="752" y="96" width="158" height="175" rx="10" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="1.5"/>
+  <rect x="752" y="96" width="158" height="32" rx="10" fill="#71277A"/>
+  <rect x="752" y="116" width="158" height="12" fill="#71277A"/>
+  <text x="764" y="117" font-family="Arial, Helvetica, sans-serif" font-size="13.5" font-weight="bold" fill="#FFFFFF">5. Python 3</text>
+  <text x="764" y="150" font-family="Arial, Helvetica, sans-serif" font-size="12" fill="#141A15">Funciones y CSV</text>
+  <text x="764" y="170" font-family="Arial, Helvetica, sans-serif" font-size="12" fill="#141A15">Índices desde 0</text>
+  <text x="764" y="190" font-family="Arial, Helvetica, sans-serif" font-size="12" fill="#141A15">Pruebas try / except</text>
+  <rect x="24" y="294" width="872" height="102" rx="12" fill="#FFFFFF" stroke="#39A900" stroke-width="1.5"/>
+  <text x="42" y="320" font-family="Arial, Helvetica, sans-serif" font-size="14" font-weight="bold" fill="#00304D">Mapa curricular · Competencia 220501093 · RAP 592376-03 (96 horas)</text>
+  <rect x="42" y="334" width="170" height="48" rx="8" fill="#EEF8EB" stroke="#007832" stroke-width="1"/>
+  <text x="52" y="354" font-family="Arial, Helvetica, sans-serif" font-size="12" font-weight="bold" fill="#007832">AA1-EV01</text>
+  <text x="52" y="372" font-family="Arial, Helvetica, sans-serif" font-size="10.5" fill="#141A15">Lógica y jerarquía (8 h)</text>
+  <rect x="225" y="334" width="345" height="48" rx="8" fill="#E6F0F7" stroke="#00304D" stroke-width="1"/>
+  <text x="235" y="354" font-family="Arial, Helvetica, sans-serif" font-size="12" font-weight="bold" fill="#00304D">AA2-EV01..EV05</text>
+  <text x="235" y="372" font-family="Arial, Helvetica, sans-serif" font-size="10.5" fill="#141A15">Secuenciales, Ciclos, Funciones, Arreglos, CSV (54 h)</text>
+  <rect x="585" y="334" width="162" height="48" rx="8" fill="#FFFBE6" stroke="#7A4B00" stroke-width="1"/>
+  <text x="595" y="354" font-family="Arial, Helvetica, sans-serif" font-size="12" font-weight="bold" fill="#7A4B00">AA3-EV01</text>
+  <text x="595" y="372" font-family="Arial, Helvetica, sans-serif" font-size="10.5" fill="#141A15">Reto integrador (20 h)</text>
+  <rect x="760" y="334" width="120" height="48" rx="8" fill="#F4ECF7" stroke="#71277A" stroke-width="1"/>
+  <text x="770" y="354" font-family="Arial, Helvetica, sans-serif" font-size="12" font-weight="bold" fill="#71277A">AA3-EV02</text>
+  <text x="770" y="372" font-family="Arial, Helvetica, sans-serif" font-size="10.5" fill="#141A15">Conocimientos (4 h)</text>
+</svg>

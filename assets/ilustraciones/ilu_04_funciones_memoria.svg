@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="920" height="420" viewBox="0 0 920 420">
+  <rect width="920" height="420" rx="16" fill="#F6F6F6" stroke="#CBD5E1" stroke-width="1.5"/>
+  <rect x="0" y="0" width="920" height="68" rx="16" fill="#00304D"/>
+  <rect x="0" y="48" width="920" height="20" fill="#00304D"/>
+  <rect x="0" y="64" width="920" height="4" fill="#39A900"/>
+  <text x="28" y="33" font-family="Arial, Helvetica, sans-serif" font-size="20" font-weight="bold" fill="#FFFFFF">Unidad 4 · Funciones, SubProcesos y ámbito en memoria</text>
+  <text x="28" y="54" font-family="Arial, Helvetica, sans-serif" font-size="13" fill="#50E5F9">Diferencia entre paso por valor (copia inmutable) y paso por referencia (objeto mutable)</text>
+  <rect x="24" y="88" width="420" height="212" rx="10" fill="#E6F0F7" stroke="#CBD5E1" stroke-width="1.5"/>
+  <rect x="24" y="88" width="420" height="32" rx="10" fill="#00304D"/>
+  <rect x="24" y="108" width="420" height="12" fill="#00304D"/>
+  <text x="36" y="109" font-family="Arial, Helvetica, sans-serif" font-size="13.5" font-weight="bold" fill="#FFFFFF">Paso por VALOR (Inmutables: int, float, str)</text>
+  <text x="36" y="142" font-family="Cascadia Mono, Consolas, monospace" font-size="12" font-weight="bold" fill="#00304D">main:   saldo = 100000  ──(copia)──▶  x = 100000</text>
+  <text x="36" y="162" font-family="Arial, Helvetica, sans-serif" font-size="12" fill="#141A15">Dentro de la función:  x = x + 5000  (x vale 105000)</text>
+  <text x="36" y="182" font-family="Cascadia Mono, Consolas, monospace" font-size="12" font-weight="bold" fill="#007832">Al volver a main:      saldo sigue en 100000</text>
+  <text x="36" y="202" font-family="Arial, Helvetica, sans-serif" font-size="12" fill="#141A15"></text>
+  <text x="36" y="222" font-family="Cascadia Mono, Consolas, monospace" font-size="12" font-weight="bold" fill="#71277A">En PSeInt:   SubProceso F(x Por Valor)</text>
+  <text x="36" y="242" font-family="Arial, Helvetica, sans-serif" font-size="12" font-weight="bold" fill="#141A15">En Python:   si reasignas el parámetro, no cambia afuera.</text>
+  <text x="36" y="262" font-family="Cascadia Mono, Consolas, monospace" font-size="12" font-weight="bold" fill="#9A3412">Para devolver resultado usa:  return nuevo_valor</text>
+  <rect x="476" y="88" width="420" height="212" rx="10" fill="#EEF8EB" stroke="#CBD5E1" stroke-width="1.5"/>
+  <rect x="476" y="88" width="420" height="32" rx="10" fill="#007832"/>
+  <rect x="476" y="108" width="420" height="12" fill="#007832"/>
+  <text x="488" y="109" font-family="Arial, Helvetica, sans-serif" font-size="13.5" font-weight="bold" fill="#FFFFFF">Paso por REFERENCIA (Mutables: list, dict)</text>
+  <text x="488" y="142" font-family="Cascadia Mono, Consolas, monospace" font-size="12" font-weight="bold" fill="#007832">main:   lista ──▶  [ "Cuaderno" ]  ◀── items (fn)</text>
+  <text x="488" y="162" font-family="Arial, Helvetica, sans-serif" font-size="12" fill="#141A15">Dentro de la función:  items.append("Lápiz")</text>
+  <text x="488" y="182" font-family="Cascadia Mono, Consolas, monospace" font-size="12" font-weight="bold" fill="#71277A">Al volver a main:      lista = ["Cuaderno", "Lápiz"]</text>
+  <text x="488" y="202" font-family="Arial, Helvetica, sans-serif" font-size="12" fill="#141A15"></text>
+  <text x="488" y="222" font-family="Cascadia Mono, Consolas, monospace" font-size="12" font-weight="bold" fill="#71277A">En PSeInt:   SubProceso F(x Por Referencia)</text>
+  <text x="488" y="242" font-family="Arial, Helvetica, sans-serif" font-size="12" font-weight="bold" fill="#141A15">En Python:   mutar lista[0] o .append() cambia la original.</text>
+  <text x="488" y="262" font-family="Cascadia Mono, Consolas, monospace" font-size="12" font-weight="bold" fill="#9A3412">Si solo ejecuta una acción sin valor, retorna None.</text>
+  <rect x="24" y="316" width="872" height="84" rx="10" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="1.5"/>
+  <rect x="24" y="316" width="872" height="32" rx="10" fill="#71277A"/>
+  <rect x="24" y="336" width="872" height="12" fill="#71277A"/>
+  <text x="36" y="337" font-family="Arial, Helvetica, sans-serif" font-size="13.5" font-weight="bold" fill="#FFFFFF">Buenas prácticas de modularidad (Principio DRY + Docstrings)</text>
+  <text x="36" y="370" font-family="Cascadia Mono, Consolas, monospace" font-size="12" font-weight="bold" fill="#00304D">def leer_positivo(msg):  """Docstring que explica propósito, parámetros y retorno."""</text>
+  <text x="36" y="390" font-family="Arial, Helvetica, sans-serif" font-size="12" fill="#141A15">Evita duplicar bloques en opciones de menú: extrae la lógica común a subprogramas bien nombrados.</text>
+</svg>

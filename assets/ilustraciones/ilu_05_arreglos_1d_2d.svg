@@ -1,0 +1,48 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="920" height="420" viewBox="0 0 920 420">
+  <rect width="920" height="420" rx="16" fill="#F6F6F6" stroke="#CBD5E1" stroke-width="1.5"/>
+  <rect x="0" y="0" width="920" height="68" rx="16" fill="#00304D"/>
+  <rect x="0" y="48" width="920" height="20" fill="#00304D"/>
+  <rect x="0" y="64" width="920" height="4" fill="#39A900"/>
+  <text x="28" y="33" font-family="Arial, Helvetica, sans-serif" font-size="20" font-weight="bold" fill="#FFFFFF">Unidad 5 · Arreglos paralelos (índice 1 vs. 0), burbuja y matrices</text>
+  <text x="28" y="54" font-family="Arial, Helvetica, sans-serif" font-size="13" fill="#50E5F9">Indexación en PSeInt perfil Flexible frente a Python 3 y recorrido bidimensional</text>
+  <rect x="24" y="84" width="872" height="128" rx="10" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="1.5"/>
+  <text x="40" y="108" font-family="Arial, Helvetica, sans-serif" font-size="13.5" font-weight="bold" fill="#00304D">Vectores paralelos sincronizados por posición (ejemplo d07 Papelería Sugamuxi)</text>
+  <rect x="40" y="120" width="156" height="80" rx="8" fill="#F6F6F6" stroke="#CBD5E1" stroke-width="1.5"/>
+  <text x="48" y="138" font-family="Cascadia Mono, Consolas, monospace" font-size="11" font-weight="bold" fill="#71277A">PSeInt [1] | Py [0]</text>
+  <text x="48" y="158" font-family="Cascadia Mono, Consolas, monospace" font-size="12" font-weight="bold" fill="#00304D">P01 · Cuaderno</text>
+  <text x="48" y="176" font-family="Cascadia Mono, Consolas, monospace" font-size="12" fill="#007832">Precio: $4500</text>
+  <rect x="210" y="120" width="156" height="80" rx="8" fill="#F6F6F6" stroke="#CBD5E1" stroke-width="1.5"/>
+  <text x="218" y="138" font-family="Cascadia Mono, Consolas, monospace" font-size="11" font-weight="bold" fill="#71277A">PSeInt [2] | Py [1]</text>
+  <text x="218" y="158" font-family="Cascadia Mono, Consolas, monospace" font-size="12" font-weight="bold" fill="#00304D">P02 · Lápiz</text>
+  <text x="218" y="176" font-family="Cascadia Mono, Consolas, monospace" font-size="12" fill="#007832">Precio: $1200</text>
+  <rect x="380" y="120" width="156" height="80" rx="8" fill="#EEF8EB" stroke="#007832" stroke-width="1.5"/>
+  <text x="388" y="138" font-family="Cascadia Mono, Consolas, monospace" font-size="11" font-weight="bold" fill="#71277A">PSeInt [3] | Py [2]</text>
+  <text x="388" y="158" font-family="Cascadia Mono, Consolas, monospace" font-size="12" font-weight="bold" fill="#00304D">P03 · Resma</text>
+  <text x="388" y="176" font-family="Cascadia Mono, Consolas, monospace" font-size="12" fill="#007832">Precio: $18000</text>
+  <rect x="550" y="120" width="156" height="80" rx="8" fill="#F6F6F6" stroke="#CBD5E1" stroke-width="1.5"/>
+  <text x="558" y="138" font-family="Cascadia Mono, Consolas, monospace" font-size="11" font-weight="bold" fill="#71277A">PSeInt [4] | Py [3]</text>
+  <text x="558" y="158" font-family="Cascadia Mono, Consolas, monospace" font-size="12" font-weight="bold" fill="#00304D">P04 · Marcador</text>
+  <text x="558" y="176" font-family="Cascadia Mono, Consolas, monospace" font-size="12" fill="#007832">Precio: $3500</text>
+  <rect x="720" y="120" width="156" height="80" rx="8" fill="#F6F6F6" stroke="#CBD5E1" stroke-width="1.5"/>
+  <text x="728" y="138" font-family="Cascadia Mono, Consolas, monospace" font-size="11" font-weight="bold" fill="#71277A">PSeInt [5] | Py [4]</text>
+  <text x="728" y="158" font-family="Cascadia Mono, Consolas, monospace" font-size="12" font-weight="bold" fill="#00304D">P05 · Carpeta</text>
+  <text x="728" y="176" font-family="Cascadia Mono, Consolas, monospace" font-size="12" fill="#007832">Precio: $2800</text>
+  <rect x="24" y="228" width="424" height="172" rx="10" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="1.5"/>
+  <rect x="24" y="228" width="424" height="32" rx="10" fill="#00304D"/>
+  <rect x="24" y="248" width="424" height="12" fill="#00304D"/>
+  <text x="36" y="249" font-family="Arial, Helvetica, sans-serif" font-size="13.5" font-weight="bold" fill="#FFFFFF">Ordenamiento por Burbuja (j y j+1)</text>
+  <text x="36" y="282" font-family="Arial, Helvetica, sans-serif" font-size="12" font-weight="bold" fill="#00304D">Compara pares vecinos: si v[j] &gt; v[j+1] intercambia</text>
+  <text x="36" y="302" font-family="Cascadia Mono, Consolas, monospace" font-size="12" font-weight="bold" fill="#007832">aux = precios[j]; precios[j] = precios[j+1]...</text>
+  <text x="36" y="322" font-family="Cascadia Mono, Consolas, monospace" font-size="12" font-weight="bold" fill="#9A3412">¡Regla crítica! Si usas vectores paralelos, mueve</text>
+  <text x="36" y="342" font-family="Cascadia Mono, Consolas, monospace" font-size="12" font-weight="bold" fill="#9A3412">los 4 arreglos en el mismo instante (i/j).</text>
+  <text x="36" y="362" font-family="Arial, Helvetica, sans-serif" font-size="12" fill="#141A15">Tras cada pasada, el mayor queda fijo al final.</text>
+  <rect x="472" y="228" width="424" height="172" rx="10" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="1.5"/>
+  <rect x="472" y="228" width="424" height="32" rx="10" fill="#007832"/>
+  <rect x="472" y="248" width="424" height="12" fill="#007832"/>
+  <text x="484" y="249" font-family="Arial, Helvetica, sans-serif" font-size="13.5" font-weight="bold" fill="#FFFFFF">Matrices 2D (Filas × Columnas)</text>
+  <text x="484" y="282" font-family="Cascadia Mono, Consolas, monospace" font-size="12" font-weight="bold" fill="#00304D">PSeInt: ventas[f, c]   |   Python: ventas[f][c]</text>
+  <text x="484" y="302" font-family="Cascadia Mono, Consolas, monospace" font-size="12" font-weight="bold" fill="#007832">Total por FILA (vendedor): for f ... for c</text>
+  <text x="484" y="322" font-family="Cascadia Mono, Consolas, monospace" font-size="12" font-weight="bold" fill="#71277A">Total por COLUMNA (semana): for c ... for f</text>
+  <text x="484" y="342" font-family="Arial, Helvetica, sans-serif" font-size="12" fill="#141A15">Útil para reportes tabulares consolidados</text>
+  <text x="484" y="362" font-family="Arial, Helvetica, sans-serif" font-size="12" fill="#141A15">con totales por fila, columna y gran total.</text>
+</svg>

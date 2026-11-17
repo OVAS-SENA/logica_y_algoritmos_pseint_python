@@ -1,0 +1,42 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="920" height="420" viewBox="0 0 920 420">
+  <rect width="920" height="420" rx="16" fill="#F6F6F6" stroke="#CBD5E1" stroke-width="1.5"/>
+  <rect x="0" y="0" width="920" height="68" rx="16" fill="#00304D"/>
+  <rect x="0" y="48" width="920" height="20" fill="#00304D"/>
+  <rect x="0" y="64" width="920" height="4" fill="#39A900"/>
+  <text x="28" y="33" font-family="Arial, Helvetica, sans-serif" font-size="20" font-weight="bold" fill="#FFFFFF">Unidad 3 · Ciclos (Para, Mientras, Repetir) y prueba de escritorio</text>
+  <text x="28" y="54" font-family="Arial, Helvetica, sans-serif" font-size="13" fill="#50E5F9">Diferencia entre ciclos de conteo, condición previa y condición posterior</text>
+  <rect x="24" y="88" width="280" height="178" rx="10" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="1.5"/>
+  <rect x="24" y="88" width="280" height="32" rx="10" fill="#00304D"/>
+  <rect x="24" y="108" width="280" height="12" fill="#00304D"/>
+  <text x="36" y="109" font-family="Arial, Helvetica, sans-serif" font-size="13.5" font-weight="bold" fill="#FFFFFF">1. Para (Iteración definida)</text>
+  <text x="36" y="142" font-family="Cascadia Mono, Consolas, monospace" font-size="12" font-weight="bold" fill="#00304D">Para i &lt;- 1 Hasta n Con Paso 1</text>
+  <text x="36" y="162" font-family="Cascadia Mono, Consolas, monospace" font-size="12" font-weight="bold" fill="#007832">for i in range(1, n + 1):</text>
+  <text x="36" y="182" font-family="Arial, Helvetica, sans-serif" font-size="12" fill="#141A15">Conoces el número exacto</text>
+  <text x="36" y="202" font-family="Arial, Helvetica, sans-serif" font-size="12" fill="#141A15">de vueltas antes de empezar.</text>
+  <text x="36" y="222" font-family="Arial, Helvetica, sans-serif" font-size="12" fill="#141A15">Uso: promedios, matrices, tablas.</text>
+  <rect x="320" y="88" width="280" height="178" rx="10" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="1.5"/>
+  <rect x="320" y="88" width="280" height="32" rx="10" fill="#007832"/>
+  <rect x="320" y="108" width="280" height="12" fill="#007832"/>
+  <text x="332" y="109" font-family="Arial, Helvetica, sans-serif" font-size="13.5" font-weight="bold" fill="#FFFFFF">2. Mientras (Evalúa al inicio)</text>
+  <text x="332" y="142" font-family="Cascadia Mono, Consolas, monospace" font-size="12" font-weight="bold" fill="#00304D">Mientras venta &lt;&gt; 0 Hacer</text>
+  <text x="332" y="162" font-family="Cascadia Mono, Consolas, monospace" font-size="12" font-weight="bold" fill="#007832">while venta != 0:</text>
+  <text x="332" y="182" font-family="Arial, Helvetica, sans-serif" font-size="12" fill="#141A15">Si la condición es falsa al</text>
+  <text x="332" y="202" font-family="Arial, Helvetica, sans-serif" font-size="12" fill="#141A15">inicio, ejecuta 0 veces.</text>
+  <text x="332" y="222" font-family="Arial, Helvetica, sans-serif" font-size="12" fill="#141A15">Uso: centinelas y validación.</text>
+  <rect x="616" y="88" width="280" height="178" rx="10" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="1.5"/>
+  <rect x="616" y="88" width="280" height="32" rx="10" fill="#71277A"/>
+  <rect x="616" y="108" width="280" height="12" fill="#71277A"/>
+  <text x="628" y="109" font-family="Arial, Helvetica, sans-serif" font-size="13.5" font-weight="bold" fill="#FFFFFF">3. Repetir (Evalúa al final)</text>
+  <text x="628" y="142" font-family="Cascadia Mono, Consolas, monospace" font-size="12" font-weight="bold" fill="#71277A">Repetir ... Hasta Que op = 6</text>
+  <text x="628" y="162" font-family="Cascadia Mono, Consolas, monospace" font-size="12" font-weight="bold" fill="#007832">while True: ... if op==6: break</text>
+  <text x="628" y="182" font-family="Arial, Helvetica, sans-serif" font-size="12" fill="#141A15">Siempre se ejecuta mínimo</text>
+  <text x="628" y="202" font-family="Arial, Helvetica, sans-serif" font-size="12" fill="#141A15">1 vez antes de comprobar salida.</text>
+  <text x="628" y="222" font-family="Arial, Helvetica, sans-serif" font-size="12" fill="#141A15">Uso: menús interactivos.</text>
+  <rect x="24" y="284" width="872" height="114" rx="10" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="1.5"/>
+  <rect x="24" y="284" width="872" height="32" rx="10" fill="#39A900"/>
+  <rect x="24" y="304" width="872" height="12" fill="#39A900"/>
+  <text x="36" y="305" font-family="Arial, Helvetica, sans-serif" font-size="13.5" font-weight="bold" fill="#000000">Variables auxiliares y trazabilidad (Prueba de escritorio)</text>
+  <text x="36" y="338" font-family="Cascadia Mono, Consolas, monospace" font-size="12" font-weight="bold" fill="#00304D">Contador: c &lt;- c + 1  (inicia en 0, paso fijo)    |    Acumulador: total &lt;- total + x  (inicia en 0 ó 1)</text>
+  <text x="36" y="358" font-family="Cascadia Mono, Consolas, monospace" font-size="12" font-weight="bold" fill="#007832">Bandera: hallado &lt;- Verdadero (booleano)          |    Centinela: valor especial (ej. 0) que cierra el ciclo</text>
+  <text x="36" y="378" font-family="Arial, Helvetica, sans-serif" font-size="12" fill="#141A15">La prueba de escritorio registra columna por columna el valor de variables, condiciones y salidas.</text>
+</svg>

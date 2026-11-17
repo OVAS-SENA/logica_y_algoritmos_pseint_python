@@ -35,6 +35,16 @@
       <file href="assets/diagramas/d05_ciclo_flujo.png"/>
       <file href="assets/diagramas/d09_buscar_flujo.png"/>
       <file href="assets/diagramas/sintesis_algoritmia.svg"/>
+      <file href="assets/ilustraciones/ilu_00_pensamiento_algoritmico.svg"/>
+      <file href="assets/ilustraciones/ilu_01_logica_operadores.svg"/>
+      <file href="assets/ilustraciones/ilu_02_eps_condicionales.svg"/>
+      <file href="assets/ilustraciones/ilu_03_ciclos_traza.svg"/>
+      <file href="assets/ilustraciones/ilu_04_funciones_memoria.svg"/>
+      <file href="assets/ilustraciones/ilu_05_arreglos_1d_2d.svg"/>
+      <file href="assets/ilustraciones/ilu_06_archivos_crud_csv.svg"/>
+      <file href="assets/ilustraciones/ilu_07_arquitectura_reto.svg"/>
+      <file href="OVA_GA3_Logica_y_algoritmos.docx"/>
+      <file href="OVA_GA3_Logica_y_algoritmos.pdf"/>
     </resource>
   </resources>
 </manifest>

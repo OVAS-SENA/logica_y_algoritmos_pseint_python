@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="920" height="420" viewBox="0 0 920 420">
+  <rect width="920" height="420" rx="16" fill="#F6F6F6" stroke="#CBD5E1" stroke-width="1.5"/>
+  <rect x="0" y="0" width="920" height="68" rx="16" fill="#00304D"/>
+  <rect x="0" y="48" width="920" height="20" fill="#00304D"/>
+  <rect x="0" y="64" width="920" height="4" fill="#39A900"/>
+  <text x="28" y="33" font-family="Arial, Helvetica, sans-serif" font-size="20" font-weight="bold" fill="#FFFFFF">Unidad 1 · Conectivos lógicos y jerarquía de operadores</text>
+  <text x="28" y="54" font-family="Arial, Helvetica, sans-serif" font-size="13" fill="#50E5F9">Simbolización proposicional, tablas de verdad y precedencia exacta en PSeInt / Python</text>
+  <rect x="24" y="88" width="420" height="308" rx="10" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="1.5"/>
+  <rect x="24" y="88" width="420" height="32" rx="10" fill="#007832"/>
+  <rect x="24" y="108" width="420" height="12" fill="#007832"/>
+  <text x="36" y="109" font-family="Arial, Helvetica, sans-serif" font-size="13.5" font-weight="bold" fill="#FFFFFF">Conectivos proposicionales esenciales</text>
+  <text x="36" y="142" font-family="Cascadia Mono, Consolas, monospace" font-size="12" font-weight="bold" fill="#00304D">Negación (¬p)         →  NO p / not p</text>
+  <text x="36" y="162" font-family="Arial, Helvetica, sans-serif" font-size="12" fill="#141A15">  Invierte el valor de verdad (V ↔ F).</text>
+  <text x="36" y="182" font-family="Cascadia Mono, Consolas, monospace" font-size="12" font-weight="bold" fill="#007832">Conjunción (p ∧ q)    →  p Y q / p and q</text>
+  <text x="36" y="202" font-family="Arial, Helvetica, sans-serif" font-size="12" fill="#141A15">  Solo es Verdadera cuando p y q son V.</text>
+  <text x="36" y="222" font-family="Cascadia Mono, Consolas, monospace" font-size="12" font-weight="bold" fill="#007832">Disyunción (p ∨ q)    →  p O q / p or q</text>
+  <text x="36" y="242" font-family="Arial, Helvetica, sans-serif" font-size="12" fill="#141A15">  Solo es Falsa cuando ambas son F.</text>
+  <text x="36" y="262" font-family="Cascadia Mono, Consolas, monospace" font-size="12" font-weight="bold" fill="#71277A">Condicional (p → q)   →  (not p) or q</text>
+  <text x="36" y="282" font-family="Arial, Helvetica, sans-serif" font-size="12" fill="#141A15">  Único caso falso: antecedente V y consecuente F.</text>
+  <text x="36" y="302" font-family="Cascadia Mono, Consolas, monospace" font-size="12" font-weight="bold" fill="#00304D">Bicondicional (p ↔ q) →  p == q</text>
+  <text x="36" y="322" font-family="Arial, Helvetica, sans-serif" font-size="12" fill="#141A15">  Verdadera si ambas coinciden (VV o FF).</text>
+  <text x="36" y="342" font-family="Cascadia Mono, Consolas, monospace" font-size="12" font-weight="bold" fill="#9A3412">De Morgan: ¬(p∧q) ≡ ¬p∨¬q · ¬(p∨q) ≡ ¬p∧¬q</text>
+  <rect x="466" y="88" width="430" height="308" rx="10" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="1.5"/>
+  <rect x="466" y="88" width="430" height="32" rx="10" fill="#00304D"/>
+  <rect x="466" y="108" width="430" height="12" fill="#00304D"/>
+  <text x="478" y="109" font-family="Arial, Helvetica, sans-serif" font-size="13.5" font-weight="bold" fill="#FFFFFF">Pirámide de precedencia (8 niveles)</text>
+  <text x="478" y="142" font-family="Cascadia Mono, Consolas, monospace" font-size="12" font-weight="bold" fill="#00304D">1. Paréntesis:      ( ... )   [interno primero]</text>
+  <text x="478" y="162" font-family="Cascadia Mono, Consolas, monospace" font-size="12" font-weight="bold" fill="#007832">2. Potenciación:    ^  (PSeInt)  /  ** (Python)</text>
+  <text x="478" y="182" font-family="Cascadia Mono, Consolas, monospace" font-size="12" font-weight="bold" fill="#007832">3. Mult / Div / Mod: *  /  MOD   /   * / // %</text>
+  <text x="478" y="202" font-family="Cascadia Mono, Consolas, monospace" font-size="12" font-weight="bold" fill="#141A15">4. Suma y resta:    +  -  (izquierda a derecha)</text>
+  <text x="478" y="222" font-family="Cascadia Mono, Consolas, monospace" font-size="12" font-weight="bold" fill="#71277A">5. Relacionales:    = &lt;&gt; &lt; &gt; &lt;= &gt;=  /  == !=</text>
+  <text x="478" y="242" font-family="Cascadia Mono, Consolas, monospace" font-size="12" font-weight="bold" fill="#9A3412">6. Negación lógica: NO / not</text>
+  <text x="478" y="262" font-family="Cascadia Mono, Consolas, monospace" font-size="12" font-weight="bold" fill="#00304D">7. Conjunción:      Y / and</text>
+  <text x="478" y="282" font-family="Cascadia Mono, Consolas, monospace" font-size="12" font-weight="bold" fill="#00304D">8. Disyunción:      O / or</text>
+  <text x="478" y="302" font-family="Arial, Helvetica, sans-serif" font-size="12" fill="#141A15">------------------------------------------------</text>
+  <text x="478" y="322" font-family="Cascadia Mono, Consolas, monospace" font-size="12" font-weight="bold" fill="#71277A">Ejemplo CF07 corregido: 2 + 12 * 20 + 9</text>
+  <text x="478" y="342" font-family="Cascadia Mono, Consolas, monospace" font-size="12" font-weight="bold" fill="#007832">  12 * 20 = 240  →  2 + 240 + 9 = 251</text>
+</svg>
