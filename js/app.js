@@ -39,12 +39,20 @@
     var progressPill = document.getElementById("progressPill");
     var themeToggle = document.getElementById("themeToggle");
     var menuToggle = document.getElementById("menuToggle");
+    var readerModeToggle = document.getElementById("readerModeToggle");
+    var printPageBtn = document.getElementById("printPageBtn");
+    var sidebarPrintBtn = document.getElementById("sidebarPrintBtn");
+    var readerModeBanner = document.getElementById("readerModeBanner");
+    var readerAllBtn = document.getElementById("readerAllBtn");
+    var readerPrintBtn = document.getElementById("readerPrintBtn");
+    var readerExitBtn = document.getElementById("readerExitBtn");
     var sidebar = document.querySelector(".sidebar");
     var stepPrevBtn = document.getElementById("stepPrevBtn");
     var stepNextBtn = document.getElementById("stepNextBtn");
     var stepCounterLabel = document.getElementById("stepCounterLabel");
     var stepDotsContainer = document.getElementById("stepDotsContainer");
     var primeraCarga = true;
+    var secActualId = null;
 
     var STEPS = [
       { id: "intro", label: "Introducción y Ficha" },
@@ -79,8 +87,10 @@
       if (meta) meta.setAttribute("content", theme === "dark" ? "#0F1412" : "#00304D");
       if (!themeToggle) return;
       themeToggle.innerHTML = theme === "dark" ? ICON_SUN : ICON_MOON;
-      themeToggle.title = theme === "dark" ? "Cambiar a modo claro" : "Cambiar a modo oscuro";
-      themeToggle.setAttribute("aria-label", themeToggle.title);
+      var labelTema = theme === "dark" ? "Cambiar a modo claro" : "Cambiar a modo oscuro";
+      themeToggle.setAttribute("data-tooltip", labelTema);
+      themeToggle.setAttribute("aria-label", labelTema);
+      themeToggle.removeAttribute("title");
     }
 
     function initTheme() {
@@ -101,18 +111,104 @@
       });
     }
 
-    /* ---------------- Menú Móvil ---------------- */
-    if (menuToggle && sidebar) {
-      menuToggle.addEventListener("click", function () {
+    /* ---------------- Menú Colapsable (Escritorio pantalla completa + Móvil) ---------------- */
+    function actualizarEstadoMenuBtn() {
+      if (!menuToggle) return;
+      var esMovil = window.innerWidth <= 992;
+      var visible = esMovil
+        ? (sidebar && sidebar.classList.contains("open"))
+        : !document.body.classList.contains("sidebar-collapsed");
+      menuToggle.setAttribute("aria-expanded", visible ? "true" : "false");
+      var tip = visible
+        ? "Ocultar menú lateral para ampliar a pantalla completa (Alt + B)"
+        : "Mostrar menú lateral de navegación (Alt + B)";
+      menuToggle.setAttribute("data-tooltip", tip);
+      menuToggle.setAttribute("aria-label", tip);
+    }
+
+    function alternarMenuLateral() {
+      if (!sidebar) return;
+      if (window.innerWidth <= 992) {
         sidebar.classList.toggle("open");
-      });
+      } else {
+        var colapsado = document.body.classList.toggle("sidebar-collapsed");
+        safeSet("ga3_ova_sidebar_colapsada", colapsado ? "1" : "0");
+      }
+      actualizarEstadoMenuBtn();
+    }
+
+    if (menuToggle && sidebar) {
+      if (window.innerWidth > 992 && safeGet("ga3_ova_sidebar_colapsada") === "1") {
+        document.body.classList.add("sidebar-collapsed");
+      }
+      actualizarEstadoMenuBtn();
+      menuToggle.addEventListener("click", alternarMenuLateral);
       document.addEventListener("click", function (e) {
         if (window.innerWidth <= 992 && sidebar.classList.contains("open") &&
             !sidebar.contains(e.target) && !menuToggle.contains(e.target)) {
           sidebar.classList.remove("open");
+          actualizarEstadoMenuBtn();
         }
       });
+      window.addEventListener("resize", actualizarEstadoMenuBtn);
     }
+
+    /* ---------------- Modo Lectura e Impresión del Navegador ---------------- */
+    function setReaderMode(activo) {
+      document.body.classList.toggle("reader-mode", Boolean(activo));
+      if (!activo) {
+        document.body.classList.remove("reader-all-modules");
+        if (readerAllBtn) {
+          readerAllBtn.setAttribute("aria-pressed", "false");
+          readerAllBtn.textContent = "Ver todos los módulos";
+        }
+      }
+      if (readerModeToggle) {
+        readerModeToggle.setAttribute("aria-pressed", activo ? "true" : "false");
+        readerModeToggle.classList.toggle("is-active", Boolean(activo));
+      }
+      if (readerModeBanner) {
+        if (activo) readerModeBanner.removeAttribute("hidden");
+        else readerModeBanner.setAttribute("hidden", "");
+      }
+    }
+
+    function imprimirContenidoOVA() {
+      document.body.classList.remove("printing-certificate");
+      window.print();
+    }
+
+    if (readerModeToggle) {
+      readerModeToggle.addEventListener("click", function () {
+        setReaderMode(!document.body.classList.contains("reader-mode"));
+      });
+    }
+    if (readerExitBtn) {
+      readerExitBtn.addEventListener("click", function () { setReaderMode(false); });
+    }
+    if (readerAllBtn) {
+      readerAllBtn.addEventListener("click", function () {
+        var todos = document.body.classList.toggle("reader-all-modules");
+        readerAllBtn.setAttribute("aria-pressed", todos ? "true" : "false");
+        readerAllBtn.textContent = todos ? "Ver solo módulo actual" : "Ver todos los módulos";
+      });
+    }
+    [printPageBtn, sidebarPrintBtn, readerPrintBtn].forEach(function (btn) {
+      if (btn) btn.addEventListener("click", imprimirContenidoOVA);
+    });
+
+    document.addEventListener("keydown", function (e) {
+      if (e.altKey && !e.ctrlKey && !e.metaKey) {
+        var k = (e.key || "").toLowerCase();
+        if (k === "b") {
+          e.preventDefault();
+          alternarMenuLateral();
+        } else if (k === "l") {
+          e.preventDefault();
+          setReaderMode(!document.body.classList.contains("reader-mode"));
+        }
+      }
+    });
 
     /* ---------------- Progreso, Scroll-Reveal y Navegación ---------------- */
     var revealObserver = null;
@@ -158,7 +254,7 @@
         dot.type = "button";
         dot.className = "step-dot";
         dot.setAttribute("aria-label", "Ir al paso " + (idx + 1) + ": " + st.label);
-        dot.title = st.label;
+        dot.setAttribute("data-tooltip", "Ir a: " + st.label);
         dot.dataset.stepTarget = st.id;
         dot.addEventListener("click", function () { navigateTo(st.id, true); });
         stepDotsContainer.appendChild(dot);
@@ -177,14 +273,14 @@
         stepPrevBtn.disabled = idx === 0;
         if (idx > 0) {
           stepPrevBtn.dataset.stepId = STEPS[idx - 1].id;
-          stepPrevBtn.title = "Anterior: " + STEPS[idx - 1].label;
+          stepPrevBtn.setAttribute("data-tooltip", "Anterior: " + STEPS[idx - 1].label);
         }
       }
       if (stepNextBtn) {
         stepNextBtn.disabled = idx >= STEPS.length - 1;
         if (idx < STEPS.length - 1) {
           stepNextBtn.dataset.stepId = STEPS[idx + 1].id;
-          stepNextBtn.title = "Siguiente: " + STEPS[idx + 1].label;
+          stepNextBtn.setAttribute("data-tooltip", "Siguiente: " + STEPS[idx + 1].label);
         }
       }
       if (stepDotsContainer) {
@@ -220,6 +316,308 @@
       safeSet("ga3_ova_visitadas", JSON.stringify(Array.from(visited)));
     }
 
+    /* ---------------- Ventanas de Bloques (Min/Max/Cerrar) y Enfoque por Pestañas ---------------- */
+    var ICON_WIN_MIN = '<svg viewBox="0 0 24 24" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12"/></svg>';
+    var ICON_WIN_MAX = '<svg viewBox="0 0 24 24" aria-hidden="true"><polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/><line x1="21" y1="3" x2="14" y2="10"/><line x1="3" y1="21" x2="10" y2="14"/></svg>';
+    var ICON_WIN_RESTORE = '<svg viewBox="0 0 24 24" aria-hidden="true"><polyline points="4 14 10 14 10 20"/><polyline points="20 10 14 10 14 4"/><line x1="14" y1="10" x2="21" y2="3"/><line x1="3" y1="21" x2="10" y2="14"/></svg>';
+    var ICON_WIN_CLOSE = '<svg viewBox="0 0 24 24" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>';
+
+    function restaurarVentanasAlCambiarModulo(nuevoSecId) {
+      document.querySelectorAll(".sena-card.is-maximized").forEach(function (c) {
+        c.classList.remove("is-maximized");
+        var maxBtn = c.querySelector(".win-max");
+        if (maxBtn) {
+          maxBtn.innerHTML = ICON_WIN_MAX;
+          maxBtn.setAttribute("aria-pressed", "false");
+          maxBtn.setAttribute("data-tooltip", "Maximizar este bloque para concentrarse sin distracciones");
+        }
+      });
+      if (secActualId && secActualId !== nuevoSecId) {
+        document.querySelectorAll(".content-section .sena-card.is-closed").forEach(function (c) {
+          c.classList.remove("is-closed");
+        });
+        sections.forEach(function (s) {
+          if (typeof s._syncFocusBar === "function") s._syncFocusBar();
+        });
+      }
+    }
+
+    function initVentanasYEnfoque() {
+      sections.forEach(function (sec) {
+        var cards = Array.prototype.slice.call(sec.querySelectorAll(":scope > .sena-card"));
+        if (!cards.length) return;
+
+        var tabButtons = [];
+        var focusMode = "windows";
+        var activeTabIdx = 0;
+
+        cards.forEach(function (card, idx) {
+          var header = card.querySelector(":scope > .sena-card-header");
+          if (!header) return;
+
+          var titleEl = header.querySelector(".card-title");
+          var titleTxt = titleEl ? titleEl.textContent.trim() : ("Bloque " + (idx + 1));
+
+          var bodyDiv = document.createElement("div");
+          bodyDiv.className = "sena-card-body";
+          var nodo = header.nextSibling;
+          while (nodo) {
+            var sig = nodo.nextSibling;
+            bodyDiv.appendChild(nodo);
+            nodo = sig;
+          }
+          card.appendChild(bodyDiv);
+
+          var controls = document.createElement("div");
+          controls.className = "window-controls";
+
+          var minBtn = document.createElement("button");
+          minBtn.type = "button";
+          minBtn.className = "window-btn win-min";
+          minBtn.innerHTML = ICON_WIN_MIN;
+          minBtn.setAttribute("aria-pressed", "false");
+          minBtn.setAttribute("aria-label", "Minimizar bloque: " + titleTxt);
+          minBtn.setAttribute("data-tooltip", "Minimizar este bloque");
+
+          var maxBtn = document.createElement("button");
+          maxBtn.type = "button";
+          maxBtn.className = "window-btn win-max";
+          maxBtn.innerHTML = ICON_WIN_MAX;
+          maxBtn.setAttribute("aria-pressed", "false");
+          maxBtn.setAttribute("aria-label", "Maximizar bloque: " + titleTxt);
+          maxBtn.setAttribute("data-tooltip", "Maximizar este bloque para concentrarse sin distracciones");
+
+          var closeBtn = document.createElement("button");
+          closeBtn.type = "button";
+          closeBtn.className = "window-btn win-close";
+          closeBtn.innerHTML = ICON_WIN_CLOSE;
+          closeBtn.setAttribute("aria-label", "Cerrar bloque temporalmente: " + titleTxt);
+          closeBtn.setAttribute("data-tooltip", "Cerrar bloque temporalmente (se restaura al cambiar de módulo)");
+
+          minBtn.addEventListener("click", function () {
+            if (card.classList.contains("is-maximized")) {
+              card.classList.remove("is-maximized");
+              maxBtn.innerHTML = ICON_WIN_MAX;
+              maxBtn.setAttribute("aria-pressed", "false");
+            }
+            var isMin = card.classList.toggle("is-minimized");
+            minBtn.setAttribute("aria-pressed", isMin ? "true" : "false");
+            minBtn.setAttribute("data-tooltip", isMin ? "Expandir contenido del bloque" : "Minimizar este bloque");
+          });
+
+          maxBtn.addEventListener("click", function () {
+            var opening = !card.classList.contains("is-maximized");
+            document.querySelectorAll(".sena-card.is-maximized").forEach(function (other) {
+              other.classList.remove("is-maximized");
+              var omb = other.querySelector(".win-max");
+              if (omb) { omb.innerHTML = ICON_WIN_MAX; omb.setAttribute("aria-pressed", "false"); }
+            });
+            if (opening) {
+              card.classList.remove("is-minimized", "is-closed", "is-tab-hidden");
+              minBtn.setAttribute("aria-pressed", "false");
+              card.classList.add("is-maximized");
+              maxBtn.innerHTML = ICON_WIN_RESTORE;
+              maxBtn.setAttribute("aria-pressed", "true");
+              maxBtn.setAttribute("data-tooltip", "Restaurar tamaño normal (Esc)");
+            } else {
+              card.classList.remove("is-maximized");
+              maxBtn.innerHTML = ICON_WIN_MAX;
+              maxBtn.setAttribute("aria-pressed", "false");
+              maxBtn.setAttribute("data-tooltip", "Maximizar este bloque para concentrarse sin distracciones");
+              if (typeof sec._syncFocusBar === "function") sec._syncFocusBar();
+            }
+          });
+
+          closeBtn.addEventListener("click", function () {
+            card.classList.remove("is-maximized");
+            card.classList.add("is-closed");
+            maxBtn.innerHTML = ICON_WIN_MAX;
+            maxBtn.setAttribute("aria-pressed", "false");
+            if (focusMode === "tabs") {
+              var nextVis = cards.findIndex(function (c) { return !c.classList.contains("is-closed"); });
+              if (nextVis >= 0) activeTabIdx = nextVis;
+            }
+            if (typeof sec._syncFocusBar === "function") sec._syncFocusBar();
+          });
+
+          controls.appendChild(minBtn);
+          controls.appendChild(maxBtn);
+          controls.appendChild(closeBtn);
+          header.appendChild(controls);
+        });
+
+        if (cards.length < 2) return;
+
+        var bar = document.createElement("div");
+        bar.className = "module-focus-bar";
+
+        var topRow = document.createElement("div");
+        topRow.className = "module-focus-top";
+
+        var modeGroup = document.createElement("div");
+        modeGroup.className = "module-focus-modes";
+
+        var btnWinMode = document.createElement("button");
+        btnWinMode.type = "button";
+        btnWinMode.className = "focus-pill-btn active";
+        btnWinMode.textContent = "Vista ventanas";
+        btnWinMode.setAttribute("data-tooltip", "Ver todos los bloques como ventanas independientes");
+
+        var btnTabMode = document.createElement("button");
+        btnTabMode.type = "button";
+        btnTabMode.className = "focus-pill-btn";
+        btnTabMode.textContent = "Enfoque 1 a la vez (pestañas)";
+        btnTabMode.setAttribute("data-tooltip", "Mostrar únicamente un bloque a la vez mediante pestañas para evitar distracciones");
+
+        modeGroup.appendChild(btnWinMode);
+        modeGroup.appendChild(btnTabMode);
+
+        var actGroup = document.createElement("div");
+        actGroup.className = "module-focus-actions";
+
+        var btnMinAll = document.createElement("button");
+        btnMinAll.type = "button";
+        btnMinAll.className = "focus-pill-btn";
+        btnMinAll.textContent = "Minimizar todo";
+        btnMinAll.setAttribute("data-tooltip", "Colapsar todos los bloques de este módulo");
+
+        var btnExpAll = document.createElement("button");
+        btnExpAll.type = "button";
+        btnExpAll.className = "focus-pill-btn";
+        btnExpAll.textContent = "Expandir todo";
+        btnExpAll.setAttribute("data-tooltip", "Mostrar el contenido completo de todos los bloques");
+
+        var btnRestore = document.createElement("button");
+        btnRestore.type = "button";
+        btnRestore.className = "focus-pill-btn restore-btn";
+        btnRestore.hidden = true;
+        btnRestore.setAttribute("data-tooltip", "Volver a mostrar los bloques cerrados en este módulo");
+
+        actGroup.appendChild(btnMinAll);
+        actGroup.appendChild(btnExpAll);
+        actGroup.appendChild(btnRestore);
+        topRow.appendChild(modeGroup);
+        topRow.appendChild(actGroup);
+
+        var tabsRow = document.createElement("div");
+        tabsRow.className = "module-focus-tabs";
+        tabsRow.setAttribute("role", "tablist");
+        tabsRow.hidden = true;
+
+        cards.forEach(function (card, idx) {
+          var tEl = card.querySelector(":scope > .sena-card-header .card-title");
+          var full = tEl ? tEl.textContent.trim() : ("Bloque " + (idx + 1));
+          var shortTxt = full.length > 42 ? full.slice(0, 40) + "…" : full;
+          var tBtn = document.createElement("button");
+          tBtn.type = "button";
+          tBtn.className = "focus-tab-item";
+          tBtn.setAttribute("role", "tab");
+          tBtn.textContent = shortTxt;
+          tBtn.setAttribute("data-tooltip", "Enfocar bloque: " + full);
+          tBtn.addEventListener("click", function () {
+            card.classList.remove("is-closed", "is-minimized");
+            activeTabIdx = idx;
+            syncFocusBar();
+          });
+          tabsRow.appendChild(tBtn);
+          tabButtons.push(tBtn);
+        });
+
+        bar.appendChild(topRow);
+        bar.appendChild(tabsRow);
+
+        var secHeader = sec.querySelector(":scope > .section-header");
+        if (secHeader && secHeader.nextSibling) {
+          sec.insertBefore(bar, secHeader.nextSibling);
+        } else {
+          sec.insertBefore(bar, cards[0]);
+        }
+
+        function syncFocusBar() {
+          var closedCount = 0;
+          cards.forEach(function (c, i) {
+            if (c.classList.contains("is-closed")) closedCount++;
+            if (focusMode === "tabs") {
+              c.classList.toggle("is-tab-hidden", i !== activeTabIdx);
+              if (i === activeTabIdx) c.classList.remove("is-minimized");
+            } else {
+              c.classList.remove("is-tab-hidden");
+            }
+          });
+          tabButtons.forEach(function (tb, i) {
+            var isAct = i === activeTabIdx;
+            tb.classList.toggle("active", isAct);
+            tb.setAttribute("aria-selected", isAct ? "true" : "false");
+          });
+          btnWinMode.classList.toggle("active", focusMode === "windows");
+          btnTabMode.classList.toggle("active", focusMode === "tabs");
+          tabsRow.hidden = focusMode !== "tabs";
+          btnMinAll.hidden = focusMode === "tabs";
+          btnExpAll.hidden = focusMode === "tabs";
+          btnRestore.hidden = closedCount === 0;
+          if (closedCount > 0) btnRestore.textContent = "Restaurar cerradas (" + closedCount + ")";
+        }
+
+        btnWinMode.addEventListener("click", function () {
+          focusMode = "windows";
+          syncFocusBar();
+        });
+        btnTabMode.addEventListener("click", function () {
+          focusMode = "tabs";
+          if (cards[activeTabIdx] && cards[activeTabIdx].classList.contains("is-closed")) {
+            var firstOpen = cards.findIndex(function (c) { return !c.classList.contains("is-closed"); });
+            activeTabIdx = firstOpen >= 0 ? firstOpen : 0;
+            cards[activeTabIdx].classList.remove("is-closed");
+          }
+          syncFocusBar();
+        });
+        btnMinAll.addEventListener("click", function () {
+          cards.forEach(function (c) {
+            if (!c.classList.contains("is-closed")) {
+              c.classList.remove("is-maximized");
+              c.classList.add("is-minimized");
+              var mb = c.querySelector(".win-min");
+              if (mb) mb.setAttribute("aria-pressed", "true");
+            }
+          });
+        });
+        btnExpAll.addEventListener("click", function () {
+          cards.forEach(function (c) {
+            c.classList.remove("is-minimized");
+            var mb = c.querySelector(".win-min");
+            if (mb) mb.setAttribute("aria-pressed", "false");
+          });
+        });
+        btnRestore.addEventListener("click", function () {
+          cards.forEach(function (c) { c.classList.remove("is-closed"); });
+          syncFocusBar();
+        });
+
+        sec._syncFocusBar = syncFocusBar;
+        sec._enfocarTarjetaId = function (cardId) {
+          var idx = cards.findIndex(function (c) { return c.id === cardId; });
+          if (idx >= 0) {
+            cards[idx].classList.remove("is-closed", "is-minimized");
+            activeTabIdx = idx;
+            syncFocusBar();
+          }
+        };
+        syncFocusBar();
+      });
+
+      document.addEventListener("keydown", function (e) {
+        if (e.key === "Escape") {
+          var maxCard = document.querySelector(".sena-card.is-maximized");
+          if (maxCard) {
+            maxCard.classList.remove("is-maximized");
+            var mb = maxCard.querySelector(".win-max");
+            if (mb) { mb.innerHTML = ICON_WIN_MAX; mb.setAttribute("aria-pressed", "false"); }
+          }
+        }
+      });
+    }
+    initVentanasYEnfoque();
+
     function navigateTo(rawTarget, pushHash) {
       var clean = String(rawTarget || "intro").replace(/^#/, "");
       var mapped = ALIAS_HASH[clean];
@@ -230,6 +628,12 @@
       if (!targetSection) {
         secId = "intro";
         targetSection = document.getElementById("intro");
+      }
+
+      restaurarVentanasAlCambiarModulo(secId);
+      secActualId = secId;
+      if (scrollId && typeof targetSection._enfocarTarjetaId === "function") {
+        targetSection._enfocarTarjetaId(scrollId);
       }
 
       function aplicarCambioDOM() {
@@ -618,10 +1022,33 @@
       irSlide(0);
     });
 
-    /* ---------------- Modals de profundización (<dialog class="sena-info-modal">) ---------------- */
+    /* ---------------- Modals de profundización y Visor Atractivo de Recursos ---------------- */
     var origenModal = null;
+    var resViewerModal = document.getElementById("modal-resource-viewer");
+    var resModalBadge = document.getElementById("resModalBadge");
+    var resModalTitle = document.getElementById("resModalTitle");
+    var resModalUrlDisplay = document.getElementById("resModalUrlDisplay");
+    var resModalCopyBtn = document.getElementById("resModalCopyBtn");
+    var resModalExternalBtn = document.getElementById("resModalExternalBtn");
+    var resModalBody = document.getElementById("resModalBody");
+    var resModalUrlActual = "";
+
+    function abrirDialogoNativo(dlg) {
+      if (!dlg) return;
+      origenModal = document.activeElement;
+      try {
+        if (typeof dlg.showModal === "function") dlg.showModal();
+        else dlg.setAttribute("open", "");
+      } catch (e) {
+        dlg.setAttribute("open", "");
+      }
+    }
+
     function cerrarInfoModal(dlg) {
       if (!dlg) return;
+      if (dlg.id === "modal-resource-viewer" && resModalBody) {
+        resModalBody.innerHTML = "";
+      }
       try {
         if (typeof dlg.close === "function" && dlg.open) dlg.close();
         else dlg.removeAttribute("open");
@@ -632,18 +1059,127 @@
       origenModal = null;
     }
 
+    function abrirVisorRecursos(cfg) {
+      if (!resViewerModal || !resModalBody) return;
+      resModalBody.innerHTML = "";
+      resModalUrlActual = cfg.url || "#";
+      if (resModalBadge) resModalBadge.textContent = cfg.badge || "Recurso educativo";
+      if (resModalTitle) resModalTitle.textContent = cfg.title || "Recurso SENA";
+      if (resModalUrlDisplay) resModalUrlDisplay.textContent = resModalUrlActual;
+      if (resModalExternalBtn) {
+        resModalExternalBtn.href = resModalUrlActual;
+        resModalExternalBtn.setAttribute("target", "_blank");
+        resModalExternalBtn.setAttribute("rel", "noopener noreferrer");
+      }
+
+      if (cfg.type === "video" && cfg.videoId) {
+        var wrap = document.createElement("div");
+        wrap.className = "video-embed-wrap";
+        var ifrVid = document.createElement("iframe");
+        ifrVid.src = "https://www.youtube-nocookie.com/embed/" + encodeURIComponent(cfg.videoId) + "?rel=0";
+        ifrVid.title = cfg.title || "Video educativo";
+        ifrVid.allow = "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture";
+        ifrVid.allowFullscreen = true;
+        wrap.appendChild(ifrVid);
+        resModalBody.appendChild(wrap);
+      } else if (cfg.type === "pdf" || cfg.type === "drive") {
+        var frameUrl = resModalUrlActual;
+        if (cfg.type === "drive") {
+          frameUrl = resModalUrlActual.replace(/\/view.*$/, "/preview");
+        }
+        var ifrDoc = document.createElement("iframe");
+        ifrDoc.className = "doc-preview-frame";
+        ifrDoc.src = frameUrl;
+        ifrDoc.title = cfg.title || "Vista previa de documento";
+        resModalBody.appendChild(ifrDoc);
+      } else {
+        var showcase = document.createElement("div");
+        showcase.className = "external-resource-showcase";
+        var h4 = document.createElement("h4");
+        h4.textContent = cfg.title || "Recurso externo recomendado";
+        var pDesc = document.createElement("p");
+        pDesc.textContent = cfg.desc || "Consulta este recurso en una pestaña dedicada del navegador.";
+        showcase.appendChild(h4);
+        showcase.appendChild(pDesc);
+        if (cfg.steps && cfg.steps.length) {
+          var ol = document.createElement("ol");
+          ol.className = "external-steps-list";
+          cfg.steps.forEach(function (st) {
+            var li = document.createElement("li");
+            li.textContent = st;
+            ol.appendChild(li);
+          });
+          showcase.appendChild(ol);
+        }
+        var ctaRow = document.createElement("div");
+        ctaRow.style.display = "flex";
+        ctaRow.style.flexWrap = "wrap";
+        ctaRow.style.gap = "10px";
+        var cta = document.createElement("a");
+        cta.href = resModalUrlActual;
+        cta.target = "_blank";
+        cta.rel = "noopener noreferrer";
+        cta.className = "btn btn-primary";
+        cta.textContent = "Abrir sitio oficial en nueva pestaña ↗";
+        ctaRow.appendChild(cta);
+        showcase.appendChild(ctaRow);
+        resModalBody.appendChild(showcase);
+      }
+
+      if (cfg.desc && (cfg.type === "video" || cfg.type === "pdf" || cfg.type === "drive")) {
+        var note = document.createElement("div");
+        note.className = "callout callout-info";
+        note.style.marginTop = "12px";
+        note.style.marginBottom = "0";
+        note.innerHTML =
+          '<div class="callout-icon"><svg class="svg-icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg></div>' +
+          '<div class="callout-body"><div class="callout-text">' + esc(cfg.desc) + " Si prefieres verlo a pantalla completa o descargar, pulsa el botón superior <strong>Abrir en nueva pestaña ↗</strong>.</div></div>";
+        resModalBody.appendChild(note);
+      }
+
+      abrirDialogoNativo(resViewerModal);
+    }
+
+    if (resModalCopyBtn) {
+      resModalCopyBtn.addEventListener("click", function () {
+        if (resModalUrlActual) copyText(resModalUrlActual, resModalCopyBtn);
+      });
+    }
+
     document.querySelectorAll("[data-modal-open]").forEach(function (btn) {
       btn.addEventListener("click", function () {
-        var id = btn.getAttribute("data-modal-open");
-        var dlg = document.getElementById(id);
-        if (!dlg) return;
-        origenModal = document.activeElement;
-        try {
-          if (typeof dlg.showModal === "function") dlg.showModal();
-          else dlg.setAttribute("open", "");
-        } catch (e) {
-          dlg.setAttribute("open", "");
-        }
+        var dlg = document.getElementById(btn.getAttribute("data-modal-open"));
+        abrirDialogoNativo(dlg);
+      });
+    });
+
+    document.querySelectorAll("[data-video-id]").forEach(function (btn) {
+      btn.addEventListener("click", function () {
+        var vid = btn.getAttribute("data-video-id");
+        abrirVisorRecursos({
+          type: "video",
+          videoId: vid,
+          url: "https://www.youtube.com/watch?v=" + vid,
+          badge: "Video educativo · YouTube",
+          title: btn.getAttribute("data-video-title") || "Video de apoyo SENA",
+          desc: btn.getAttribute("data-video-desc") || ""
+        });
+      });
+    });
+
+    document.querySelectorAll("[data-resource-modal]").forEach(function (link) {
+      link.addEventListener("click", function (e) {
+        if (e.ctrlKey || e.metaKey || e.shiftKey || e.button === 1) return;
+        e.preventDefault();
+        var rawSteps = link.getAttribute("data-res-steps") || "";
+        abrirVisorRecursos({
+          type: link.getAttribute("data-res-type") || "web",
+          url: link.getAttribute("href"),
+          badge: link.getAttribute("data-res-badge") || "Recurso SENA",
+          title: link.getAttribute("data-res-title") || link.textContent.trim(),
+          desc: link.getAttribute("data-res-desc") || "",
+          steps: rawSteps ? rawSteps.split("|") : []
+        });
       });
     });
 
@@ -660,27 +1196,112 @@
       });
     });
 
-    /* ---------------- Descarga de copia HTML 100 % offline autocontenida ---------------- */
-    document.querySelectorAll("[data-download-offline]").forEach(function (btn) {
-      btn.addEventListener("click", function () {
-        try {
-          var clone = document.documentElement.cloneNode(true);
-          clone.querySelectorAll("dialog[open]").forEach(function (d) { d.removeAttribute("open"); });
-          var htmlStr = "<!doctype html>\n" + clone.outerHTML;
-          var blob = new Blob([htmlStr], { type: "text/html;charset=utf-8" });
-          var url = URL.createObjectURL(blob);
-          var a = document.createElement("a");
-          a.href = url;
-          a.download = "OVA_GA3_Logica_y_algoritmos_Offline.html";
-          document.body.appendChild(a);
-          a.click();
-          document.body.removeChild(a);
-          setTimeout(function () { URL.revokeObjectURL(url); }, 1000);
-        } catch (err) {
-          window.open("index.html", "_blank");
-        }
-      });
+    /* ---------------- Todos los enlaces externos en nueva pestaña ---------------- */
+    document.querySelectorAll("a[href]").forEach(function (a) {
+      var href = a.getAttribute("href") || "";
+      if (href && href.charAt(0) !== "#" && href.indexOf("javascript:") !== 0 && !a.hasAttribute("data-target")) {
+        a.setAttribute("target", "_blank");
+        a.setAttribute("rel", "noopener noreferrer");
+      }
     });
+
+    /* ---------------- Sistema Universal de Tooltips de Ayuda ---------------- */
+    function initTooltipsOVA() {
+      var MAPA_AUTO_TOOLTIPS = {
+        "m1-go": "Generar tabla de verdad completa de la fórmula escrita",
+        "m2-go": "Evaluar la expresión paso a paso mostrando los 8 niveles de jerarquía",
+        "sim2-eps-check": "Comprobar tu clasificación Entrada – Proceso – Salida",
+        "m3-ant": "Retroceder una línea en la prueba de escritorio",
+        "m3-sig": "Avanzar una línea y actualizar la tabla de variables",
+        "m3-auto": "Reproducir o pausar la ejecución automática paso a paso",
+        "m3-fin": "Ejecutar hasta completar todo el algoritmo",
+        "sim5b-buscar-btn": "Ejecutar búsqueda secuencial comparando cada posición",
+        "sim5b-mat-step": "Recorrer la siguiente celda [fila][columna] de la matriz 2D",
+        "sim5b-mat-reset": "Restaurar los valores iniciales de la matriz 2D"
+      };
+      Object.keys(MAPA_AUTO_TOOLTIPS).forEach(function (id) {
+        var el = document.getElementById(id);
+        if (el && !el.getAttribute("data-tooltip")) el.setAttribute("data-tooltip", MAPA_AUTO_TOOLTIPS[id]);
+      });
+
+      document.querySelectorAll("button, .btn, .nav-item, .hero-wb-tab, .sena-tab-btn, .glossary-filter-btn, .accordion-header").forEach(function (el) {
+        var t = el.getAttribute("title");
+        if (t && !el.getAttribute("data-tooltip")) {
+          el.setAttribute("data-tooltip", t);
+          if (!el.getAttribute("aria-label")) el.setAttribute("aria-label", t);
+        }
+        if (el.getAttribute("data-tooltip") && t) el.removeAttribute("title");
+      });
+
+      var tipBox = document.createElement("div");
+      tipBox.id = "ovaTooltip";
+      tipBox.className = "ova-tooltip-portal";
+      tipBox.setAttribute("role", "tooltip");
+      tipBox.hidden = true;
+      document.body.appendChild(tipBox);
+
+      var activoEl = null;
+
+      function obtenerTextoAyuda(el) {
+        if (!el) return "";
+        if (el.getAttribute("data-tooltip")) return el.getAttribute("data-tooltip");
+        if (el.getAttribute("title")) return el.getAttribute("title");
+        if (el.getAttribute("aria-label")) return el.getAttribute("aria-label");
+        if (el.classList.contains("terminal-copy-btn")) return "Copiar código al portapapeles";
+        if (el.classList.contains("up")) return "Subir esta instrucción una posición";
+        if (el.classList.contains("down")) return "Bajar esta instrucción una posición";
+        if (el.classList.contains("order-check")) return "Verificar si el orden actual de instrucciones es correcto";
+        if (el.classList.contains("hero-wb-tab")) return "Cambiar el ejemplo mostrado en PSeInt y Python";
+        if (el.classList.contains("sena-tab-btn")) return "Cambiar a esta pestaña de contenido";
+        if (el.classList.contains("accordion-header")) return "Expandir o contraer esta sección";
+        if (el.classList.contains("nav-item")) return "Ir a: " + el.textContent.replace("✓", "").trim();
+        var txt = (el.textContent || "").replace(/\s+/g, " ").trim();
+        if (el.tagName === "BUTTON" && txt) return "Acción: " + txt;
+        return "";
+      }
+
+      function mostrarTooltip(el) {
+        var texto = obtenerTextoAyuda(el);
+        if (!texto) { ocultarTooltip(); return; }
+        activoEl = el;
+        tipBox.textContent = texto;
+        tipBox.hidden = false;
+        tipBox.classList.add("visible");
+
+        var rect = el.getBoundingClientRect();
+        var tw = tipBox.offsetWidth || 180;
+        var th = tipBox.offsetHeight || 32;
+        var left = rect.left + (rect.width / 2) - (tw / 2);
+        left = Math.max(8, Math.min(window.innerWidth - tw - 8, left));
+        var top = rect.top - th - 8;
+        if (top < 8) top = rect.bottom + 8;
+        tipBox.style.left = Math.round(left) + "px";
+        tipBox.style.top = Math.round(top) + "px";
+      }
+
+      function ocultarTooltip() {
+        activoEl = null;
+        tipBox.classList.remove("visible");
+        tipBox.hidden = true;
+      }
+
+      var SELS = "[data-tooltip], button, .btn, .nav-item, .hero-wb-tab, .sena-tab-btn, .accordion-header, .glossary-filter-btn";
+      document.addEventListener("mouseover", function (e) {
+        var el = e.target && e.target.closest ? e.target.closest(SELS) : null;
+        if (el && el !== activoEl) mostrarTooltip(el);
+      });
+      document.addEventListener("mouseout", function (e) {
+        if (activoEl && e.target && !activoEl.contains(e.relatedTarget)) ocultarTooltip();
+      });
+      document.addEventListener("focusin", function (e) {
+        var el = e.target && e.target.closest ? e.target.closest(SELS) : null;
+        if (el) mostrarTooltip(el);
+      });
+      document.addEventListener("focusout", ocultarTooltip);
+      document.addEventListener("click", ocultarTooltip);
+      window.addEventListener("scroll", ocultarTooltip, true);
+    }
+    initTooltipsOVA();
 
     /* ---------------- Inicio ---------------- */
     navigateTo(location.hash || "#intro", false);

@@ -48,12 +48,12 @@
   --font-main: 'Work Sans', 'Calibri', 'Segoe UI', system-ui, sans-serif;
   --font-mono: 'Cascadia Mono', Consolas, 'Courier New', monospace;
 
-  /* Dimensiones */
-  --header-height: 76px;
-  --sidebar-width: 292px;
+  /* Dimensiones optimizadas para máximo aprovechamiento de pantalla */
+  --header-height: 62px;
+  --sidebar-width: 274px;
   --radius-sm: 6px;
   --radius-md: 10px;
-  --radius-lg: 16px;
+  --radius-lg: 14px;
   --radius-full: 9999px;
 }
 
@@ -167,9 +167,9 @@ button, a, input, select, label, .flash-card, .accordion-header {
 .classification-bar {
   background-color: var(--sena-blue);
   color: var(--sena-white);
-  font-size: 0.75rem;
+  font-size: 0.72rem;
   font-weight: 600;
-  padding: 6px 24px;
+  padding: 4px 20px;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -190,9 +190,16 @@ button, a, input, select, label, .flash-card, .accordion-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 10px 24px;
-  gap: 16px;
+  padding: 5px 18px;
+  gap: 12px;
   transition: background-color 0.25s ease, border-color 0.25s ease;
+}
+
+.header-left-cluster {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
 }
 
 .header-brand {
@@ -325,8 +332,22 @@ button, a, input, select, label, .flash-card, .accordion-header {
   transform: translateY(-1px);
 }
 
+.btn-icon.is-active,
+.btn-icon[aria-pressed="true"] {
+  background: var(--sena-blue);
+  color: var(--sena-white);
+  border-color: var(--sena-blue);
+}
+
+[data-theme="dark"] .btn-icon.is-active,
+[data-theme="dark"] .btn-icon[aria-pressed="true"] {
+  background: var(--sena-green-dark);
+  border-color: var(--sena-green);
+}
+
 #menuToggle {
-  display: none;
+  display: inline-flex;
+  flex-shrink: 0;
 }
 
 /* Iconografía SVG de contorno sin relleno (@ICO) */
@@ -346,11 +367,11 @@ button, a, input, select, label, .flash-card, .accordion-header {
   height: 22px;
 }
 
-/* Layout Principal con Sidebar */
+/* Layout Principal con Sidebar colapsable */
 .app-container {
   display: flex;
   flex: 1;
-  max-width: 1460px;
+  max-width: 100%;
   width: 100%;
   margin: 0 auto;
   position: relative;
@@ -364,13 +385,31 @@ button, a, input, select, label, .flash-card, .accordion-header {
   position: sticky;
   top: var(--header-height);
   overflow-y: auto;
+  overflow-x: hidden;
   overscroll-behavior: contain;
-  padding: 18px 14px 32px;
+  padding: 14px 12px 26px;
   display: flex;
   flex-direction: column;
-  gap: 3px;
+  gap: 2px;
   flex-shrink: 0;
-  transition: left 0.25s ease, background-color 0.25s ease;
+  transition: width 0.24s ease, padding 0.24s ease, opacity 0.2s ease, left 0.24s ease, background-color 0.25s ease;
+}
+
+@media (min-width: 993px) {
+  body.sidebar-collapsed .sidebar {
+    width: 0;
+    min-width: 0;
+    padding-left: 0;
+    padding-right: 0;
+    border-right-width: 0;
+    opacity: 0;
+    pointer-events: none;
+  }
+  body.sidebar-collapsed .main-content {
+    max-width: 1480px;
+    padding-left: 32px;
+    padding-right: 32px;
+  }
 }
 
 .sidebar::-webkit-scrollbar {
@@ -472,13 +511,81 @@ button, a, input, select, label, .flash-card, .accordion-header {
   opacity: 1;
 }
 
-/* Área de Contenido Principal */
+/* Área de Contenido Principal (aprovechamiento óptimo del espacio) */
 .main-content {
   flex: 1;
   min-width: 0;
-  padding: 28px 36px 72px;
-  max-width: 1140px;
+  padding: 18px 26px 56px;
+  max-width: 1380px;
   margin: 0 auto;
+  transition: max-width 0.24s ease, padding 0.24s ease;
+}
+
+/* Barra y Modo Lectura (compatible con lectores y Ctrl+P) */
+.reader-banner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 10px;
+  background: var(--sena-blue-subtle);
+  border: 1.5px solid var(--sena-blue);
+  border-radius: var(--radius-md);
+  padding: 10px 16px;
+  margin-bottom: 16px;
+}
+[data-theme="dark"] .reader-banner {
+  border-color: var(--sena-cyan);
+}
+.reader-banner[hidden] {
+  display: none !important;
+}
+.reader-banner-info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  font-size: 0.84rem;
+}
+.reader-banner-info strong {
+  color: var(--sena-blue);
+}
+[data-theme="dark"] .reader-banner-info strong {
+  color: var(--sena-cyan);
+}
+.reader-banner-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+body.reader-mode .sidebar {
+  width: 0;
+  min-width: 0;
+  padding-left: 0;
+  padding-right: 0;
+  border-right-width: 0;
+  opacity: 0;
+  pointer-events: none;
+}
+body.reader-mode .main-content {
+  max-width: 960px;
+  padding: 22px 24px 64px;
+}
+body.reader-mode .step-nav-bar,
+body.reader-mode .module-focus-bar,
+body.reader-mode .window-controls {
+  display: none !important;
+}
+body.reader-mode .sena-card.is-minimized .sena-card-body,
+body.reader-mode .sena-card.is-closed,
+body.reader-mode .sena-card.is-tab-hidden {
+  display: block !important;
+}
+body.reader-mode.reader-all-modules .content-section {
+  display: block !important;
+  margin-bottom: 42px;
+  padding-bottom: 24px;
+  border-bottom: 2px dashed var(--border-color);
 }
 
 .content-section {
@@ -501,13 +608,13 @@ button, a, input, select, label, .flash-card, .accordion-header {
   }
 }
 
-/* Hero Banner Asimétrico + Glassmorphic Workbench (frontend-design + antigravity) */
+/* Hero Banner Asimétrico + Glassmorphic Workbench (compactado para enfoque en material) */
 .hero-banner {
   background: linear-gradient(135deg, #007832 0%, #004E28 48%, #00304D 100%);
   color: var(--sena-white);
   border-radius: var(--radius-lg);
-  padding: 32px 34px;
-  margin-bottom: 28px;
+  padding: 22px 26px;
+  margin-bottom: 18px;
   box-shadow: var(--shadow-float);
   border: 1px solid rgba(57, 169, 0, 0.4);
   position: relative;
@@ -704,18 +811,6 @@ button, a, input, select, label, .flash-card, .accordion-header {
   color: var(--text-muted);
   font-size: 0.95rem;
   max-width: 72ch;
-}
-
-/* Pager / Navegación Inferior */
-.section-pager, .pager-buttons {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 12px;
-  flex-wrap: wrap;
-  margin-top: 36px;
-  padding-top: 20px;
-  border-top: 1px solid var(--border-color);
 }
 
 .btn {
@@ -1009,5 +1104,36 @@ html.a11y-contraste .step-nav-bar {
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
+  }
+}
+
+/* Tooltips flotantes de ayuda (.ova-tooltip-portal) */
+.ova-tooltip-portal {
+  position: fixed;
+  z-index: 4500;
+  pointer-events: none;
+  max-width: 270px;
+  padding: 6px 11px;
+  border-radius: var(--radius-sm);
+  background: #002338;
+  color: #FFFFFF;
+  border: 1px solid var(--sena-cyan);
+  font-size: 0.76rem;
+  font-weight: 600;
+  line-height: 1.35;
+  box-shadow: 0 8px 22px rgba(0, 22, 36, 0.38);
+  opacity: 0;
+  transform: translateY(3px);
+  transition: opacity 0.14s ease, transform 0.14s ease;
+}
+
+.ova-tooltip-portal.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+@media (hover: none), print {
+  .ova-tooltip-portal {
+    display: none !important;
   }
 }

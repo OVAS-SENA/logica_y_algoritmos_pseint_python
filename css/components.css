@@ -3,13 +3,13 @@
    Sin `transition: all`, con soporte `:focus-visible`, `tabular-nums` y print
    ========================================================================== */
 
-/* Tarjetas y Contenedores */
+/* Tarjetas y Contenedores (Ventanas interactivas de aprendizaje) */
 .sena-card {
   background: var(--bg-card);
   border: 1px solid var(--border-color);
   border-radius: var(--radius-lg);
-  padding: 24px;
-  margin-bottom: 24px;
+  padding: 18px 20px;
+  margin-bottom: 18px;
   box-shadow: var(--shadow-sm);
   transition: border-color 0.22s ease, box-shadow 0.22s ease;
 }
@@ -23,10 +23,10 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 12px;
+  gap: 10px;
   flex-wrap: wrap;
-  margin-bottom: 16px;
-  padding-bottom: 12px;
+  margin-bottom: 14px;
+  padding-bottom: 10px;
   border-bottom: 1px solid var(--border-color);
 }
 
@@ -1138,31 +1138,77 @@ tr.actual td {
   background: rgba(57, 169, 0, 0.14);
 }
 
-/* Impresión limpia de la constancia */
+/* Impresión limpia de contenidos (Ctrl+P) o constancia (body.printing-certificate) */
 @media print {
   .skip-link, .classification-bar, .sena-header, .sidebar, .sena-footer,
-  .section-pager, .pager-buttons, #evalTabs, #quizModeControls, #quizForm,
-  .section-header, .callout {
+  .section-pager, .step-nav-bar, .sena-info-modal,
+  .btn-modal-trigger, .module-focus-bar, .window-controls, .reader-banner,
+  .a11y-boton-flotante, .a11y-controles-voz, .a11y-lectura-bloque, .a11y-leer-bloque,
+  .terminal-copy-btn, .video-actions, .sena-slider-controls, dialog {
     display: none !important;
   }
-  body, .main-content, .sena-card {
+  body, .app-container, .main-content, .sena-card, .hero-banner {
     background: #FFFFFF !important;
+    color: #111111 !important;
     box-shadow: none !important;
-    border: none !important;
-    padding: 0 !important;
-    margin: 0 !important;
     max-width: 100% !important;
+    margin: 0 !important;
+  }
+  .main-content {
+    padding: 0 !important;
+  }
+  .sena-card {
+    border: 1px solid #CBD5E0 !important;
+    padding: 12px 14px !important;
+    margin-bottom: 12px !important;
+    opacity: 1 !important;
+    transform: none !important;
+    break-inside: avoid-column;
+  }
+  .sena-card.is-minimized .sena-card-body,
+  .sena-card.is-closed,
+  .sena-card.is-tab-hidden,
+  .sena-tab-panel,
+  .sena-slide,
+  .accordion-body {
+    display: block !important;
+    max-height: none !important;
+    padding-top: 8px !important;
+    padding-bottom: 8px !important;
+    opacity: 1 !important;
+  }
+  .hero-banner {
+    border: 2px solid #00304D !important;
+    color: #00304D !important;
+  }
+  .hero-title, .hero-subtitle, .hero-wb-label {
+    color: #00304D !important;
   }
   .content-section { display: none !important; }
-  #evaluacion.content-section { display: block !important; }
-  .certificate-box {
+  .content-section.active { display: block !important; }
+  body.reader-all-modules .content-section { display: block !important; }
+
+  /* Cuando se pulsa específicamente Imprimir constancia en Evaluación */
+  body.printing-certificate .content-section { display: none !important; }
+  body.printing-certificate #evaluacion.content-section { display: block !important; }
+  body.printing-certificate #evalTabs,
+  body.printing-certificate #quizModeControls,
+  body.printing-certificate #quizForm,
+  body.printing-certificate .section-header,
+  body.printing-certificate .callout {
+    display: none !important;
+  }
+  body.printing-certificate .sena-card {
+    border: none !important;
+    padding: 0 !important;
+  }
+  body.printing-certificate .certificate-box {
     display: block !important;
     -webkit-print-color-adjust: exact;
     print-color-adjust: exact;
     page-break-inside: avoid;
   }
-  .certificate-box button { display: none !important; }
-  .step-nav-bar, .sena-info-modal, .btn-modal-trigger { display: none !important; }
+  body.printing-certificate .certificate-box button { display: none !important; }
 }
 
 /* ==========================================================================
@@ -1507,4 +1553,457 @@ dialog.sena-info-modal::backdrop {
   gap: 8px;
   margin-top: auto;
   padding-top: 4px;
+}
+
+/* ==========================================================================
+   SISTEMA DE VENTANAS DE BLOQUES, BARRA DE ENFOQUE, VIDEOS Y VISOR MODAL
+   ========================================================================== */
+
+/* Barra de enfoque por módulo (Vista Ventanas vs. Modo Enfoque por Pestañas) */
+.module-focus-bar {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-left: 4px solid var(--sena-blue);
+  border-radius: var(--radius-md);
+  padding: 10px 14px;
+  margin-bottom: 16px;
+  box-shadow: var(--shadow-sm);
+}
+
+[data-theme="dark"] .module-focus-bar {
+  border-left-color: var(--sena-cyan);
+}
+
+.module-focus-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.module-focus-modes,
+.module-focus-actions {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.focus-pill-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 5px 11px;
+  min-height: 30px;
+  border-radius: var(--radius-full);
+  border: 1px solid var(--border-color);
+  background: var(--bg-surface);
+  color: var(--text-secondary);
+  font-family: inherit;
+  font-size: 0.78rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background-color 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+}
+
+.focus-pill-btn:hover {
+  border-color: var(--sena-green);
+  color: var(--sena-green-dark);
+}
+
+[data-theme="dark"] .focus-pill-btn:hover {
+  color: var(--sena-white);
+}
+
+.focus-pill-btn.active {
+  background: var(--sena-blue);
+  border-color: var(--sena-blue);
+  color: #FFFFFF;
+}
+
+[data-theme="dark"] .focus-pill-btn.active {
+  background: var(--sena-green-dark);
+  border-color: var(--sena-green);
+}
+
+.focus-pill-btn.restore-btn {
+  background: var(--sena-yellow-subtle);
+  border-color: var(--sena-yellow);
+  color: #7C5100;
+}
+
+[data-theme="dark"] .focus-pill-btn.restore-btn {
+  color: var(--sena-yellow);
+}
+
+.module-focus-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  padding-top: 8px;
+  border-top: 1px dashed var(--border-color);
+}
+
+.module-focus-tabs[hidden] {
+  display: none !important;
+}
+
+.focus-tab-item {
+  padding: 6px 12px;
+  min-height: 32px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border-color);
+  background: var(--bg-surface);
+  color: var(--text-secondary);
+  font-family: inherit;
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+}
+
+.focus-tab-item:hover {
+  border-color: var(--sena-green);
+  color: var(--sena-green-dark);
+}
+
+[data-theme="dark"] .focus-tab-item:hover {
+  color: var(--sena-white);
+}
+
+.focus-tab-item.active {
+  background: var(--sena-green-dark);
+  border-color: var(--sena-green-dark);
+  color: #FFFFFF;
+}
+
+/* Controles de Ventana en cada .sena-card-header (Minimizar, Maximizar, Cerrar) */
+.window-controls {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  margin-left: auto;
+  flex-shrink: 0;
+}
+
+.window-btn {
+  width: 28px;
+  height: 28px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border-color);
+  background: var(--bg-surface);
+  color: var(--text-secondary);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  padding: 0;
+  transition: background-color 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+}
+
+.window-btn svg {
+  width: 14px;
+  height: 14px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2.1;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.window-btn:hover {
+  background: var(--sena-blue);
+  border-color: var(--sena-blue);
+  color: #FFFFFF;
+}
+
+.window-btn.win-close:hover {
+  background: var(--state-err);
+  border-color: var(--state-err);
+  color: #FFFFFF;
+}
+
+.sena-card.is-minimized {
+  padding-bottom: 14px;
+}
+
+.sena-card.is-minimized .sena-card-header {
+  margin-bottom: 0;
+  padding-bottom: 0;
+  border-bottom: 0;
+}
+
+.sena-card.is-minimized .sena-card-body {
+  display: none;
+}
+
+.sena-card.is-closed,
+.sena-card.is-tab-hidden {
+  display: none !important;
+}
+
+.sena-card.is-maximized {
+  position: fixed;
+  inset: 14px;
+  z-index: 1550;
+  margin: 0 !important;
+  max-width: none !important;
+  width: auto !important;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  transform: none !important;
+  border: 2px solid var(--sena-green);
+  box-shadow: 0 0 0 100vmax rgba(0, 22, 36, 0.72), var(--shadow-float);
+}
+
+html:has(.sena-card.is-maximized) {
+  overflow: hidden;
+  scrollbar-gutter: stable;
+}
+
+/* Tarjetas y Rejilla de Videos de Apoyo (.video-support-box) */
+.video-support-box {
+  margin-top: 18px;
+  padding: 14px 16px;
+  border-radius: var(--radius-md);
+  background: var(--bg-surface);
+  border: 1px solid var(--border-color);
+  border-left: 4px solid var(--sena-purple);
+}
+
+.video-support-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.video-support-title {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 0.94rem;
+  font-weight: 800;
+  color: var(--sena-blue);
+}
+
+[data-theme="dark"] .video-support-title {
+  color: var(--sena-cyan);
+}
+
+.video-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 12px;
+}
+
+.video-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.video-card:hover {
+  transform: translateY(-2px);
+  border-color: var(--sena-green);
+  box-shadow: var(--shadow-md);
+}
+
+.video-thumb {
+  position: relative;
+  height: 112px;
+  background: linear-gradient(135deg, #00304D 0%, #007832 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px;
+}
+
+.video-badge-top {
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: #FFFFFF;
+  background: rgba(0, 22, 36, 0.75);
+  border: 1px solid rgba(80, 229, 249, 0.4);
+  padding: 2px 8px;
+  border-radius: var(--radius-full);
+}
+
+.video-play-circle {
+  width: 46px;
+  height: 46px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.94);
+  color: var(--sena-green-dark);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.35);
+}
+
+.video-play-circle .svg-icon {
+  width: 22px;
+  height: 22px;
+  margin-left: 2px;
+}
+
+.video-meta {
+  padding: 12px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  flex: 1;
+}
+
+.video-title {
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: var(--sena-blue);
+  line-height: 1.3;
+}
+
+[data-theme="dark"] .video-title {
+  color: var(--sena-white);
+}
+
+.video-desc {
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+  line-height: 1.45;
+}
+
+.video-actions {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+  margin-top: auto;
+  padding-top: 6px;
+}
+
+/* Visor Universal de Recursos en Modal (PDF, Google Drive, YouTube, Fichas Web) */
+dialog.sena-resource-modal {
+  width: min(1020px, 95vw);
+  max-height: 92dvh;
+}
+
+.res-modal-head-info {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  min-width: 0;
+}
+
+.res-modal-badge {
+  font-size: 0.72rem;
+  font-weight: 800;
+  padding: 2px 10px;
+  border-radius: var(--radius-full);
+  background: var(--sena-green);
+  color: #000000;
+  white-space: nowrap;
+}
+
+.res-modal-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding: 9px 16px;
+  background: var(--bg-surface);
+  border-bottom: 1px solid var(--border-color);
+}
+
+.res-modal-url-pill {
+  flex: 1;
+  min-width: 180px;
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-sm);
+  padding: 5px 10px;
+  font-family: var(--font-mono);
+  font-size: 0.76rem;
+  color: var(--text-muted);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.res-modal-toolbar-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.res-modal-body {
+  padding: 16px 18px;
+}
+
+.video-embed-wrap {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  background: #091016;
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  border: 1px solid var(--border-color);
+}
+
+.video-embed-wrap iframe {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border: 0;
+}
+
+.doc-preview-frame {
+  width: 100%;
+  height: min(65vh, 580px);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  background: #FFFFFF;
+}
+
+.external-resource-showcase {
+  background: linear-gradient(135deg, var(--sena-blue-subtle) 0%, var(--sena-green-subtle) 100%);
+  border: 1.5px solid var(--border-color);
+  border-radius: var(--radius-md);
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.external-resource-showcase h4 {
+  font-size: 1.08rem;
+  font-weight: 800;
+  color: var(--sena-blue);
+  margin: 0;
+}
+
+[data-theme="dark"] .external-resource-showcase h4 {
+  color: var(--sena-white);
+}
+
+.external-steps-list {
+  margin: 0 0 4px 20px;
+  line-height: 1.65;
+  color: var(--text-primary);
 }

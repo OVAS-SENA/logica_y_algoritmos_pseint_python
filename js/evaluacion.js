@@ -729,8 +729,18 @@
       '  <div style="margin-top:14px; font-size:0.78rem; opacity:0.8; letter-spacing:0.6px;">' +
       '    Instructor Responsable: Diego Alonso Ojeda Medina · Centro Minero – Sogamoso' +
       "  </div>" +
-      '  <button type="button" class="btn btn-secondary" onclick="window.print()" style="margin-top:18px;">Imprimir o guardar constancia en PDF</button>' +
+      '  <button type="button" id="printCertBtn" class="btn btn-secondary" data-tooltip="Imprimir o guardar únicamente esta constancia en PDF" style="margin-top:18px;">Imprimir o guardar constancia en PDF</button>' +
       "</div>";
+    var printCertBtn = document.getElementById("printCertBtn");
+    if (printCertBtn) {
+      printCertBtn.addEventListener("click", function () {
+        document.body.classList.add("printing-certificate");
+        var limpiarPrint = function () { document.body.classList.remove("printing-certificate"); };
+        window.addEventListener("afterprint", limpiarPrint, { once: true });
+        window.print();
+        setTimeout(limpiarPrint, 1200);
+      });
+    }
     cert.scrollIntoView({ behavior: "smooth" });
   };
 
