@@ -115,24 +115,27 @@
 .badge-yellow { background: var(--sena-yellow); color: var(--sena-black); }
 .badge-purple { background: var(--sena-purple); color: var(--sena-white); }
 
-/* Grillas Didácticas */
+/* Grillas Didácticas. min(…, 100%) y min-width: 0 evitan que una columna mínima o un <pre> largo
+   ensanchen la página en móviles (caso real: paneles de código de la traza, unidad 3, 390 px). */
+.grid-2 > *, .grid-3 > *, .grid-4 > * { min-width: 0; }
+
 .grid-2 {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(min(300px, 100%), 1fr));
   gap: 18px;
   margin: 16px 0;
 }
 
 .grid-3 {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(min(240px, 100%), 1fr));
   gap: 16px;
   margin: 16px 0;
 }
 
 .grid-4 {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(min(200px, 100%), 1fr));
   gap: 14px;
   margin: 16px 0;
 }
@@ -2007,3 +2010,11 @@ dialog.sena-resource-modal {
   line-height: 1.65;
   color: var(--text-primary);
 }
+
+/* El atributo hidden debe ganar a cualquier display de componente: «Restaurar cerradas (0)» tiene
+   display: flex y se veía como un círculo amarillo vacío en la barra de enfoque. */
+[hidden] { display: none !important; }
+
+/* En móvil el botón flotante de accesibilidad compartía la esquina inferior izquierda con la barra de
+   pasos y tapaba «← Anterior». Se sube por encima de la barra. */
+body:has(.step-nav-bar) .a11y-boton-flotante { bottom: 96px; }

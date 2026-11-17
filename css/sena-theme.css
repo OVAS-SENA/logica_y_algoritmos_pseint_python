@@ -594,7 +594,10 @@ body.reader-mode.reader-all-modules .content-section {
 
 .content-section.active {
   display: block;
-  animation: fadeIn 0.28s ease-out forwards;
+  /* Sin «forwards»: al terminar, la animación no deja ningún transform en la sección. Con él, el
+     transform final (aunque sea identidad) convierte la sección en bloque contenedor y la ventana
+     maximizada (position: fixed) queda atrapada en ella en vez de cubrir la pantalla. */
+  animation: fadeIn 0.28s ease-out;
 }
 
 @keyframes fadeIn {
