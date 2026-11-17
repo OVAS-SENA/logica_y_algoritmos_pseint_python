@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<manifest identifier="SENA_GA3_220501093_Logica_Algoritmos" version="1.0"
+          xmlns="http://www.imsproject.org/xsd/imscp_rootv1p1p2"
+          xmlns:adlcp="http://www.adlnet.org/xsd/adlcp_rootv1p2"
+          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:schemaLocation="http://www.imsproject.org/xsd/imscp_rootv1p1p2 imscp_rootv1p1p2.xsd
+                              http://www.adlnet.org/xsd/adlcp_rootv1p2 adlcp_rootv1p2.xsd">
+  <metadata>
+    <schema>ADL SCORM</schema>
+    <schemaversion>1.2</schemaversion>
+  </metadata>
+  <organizations default="SENA_ORG">
+    <organization identifier="SENA_ORG">
+      <title>Guía 03: Lógica y algoritmos con PSeInt y Python (ADSO 228118)</title>
+      <item identifier="ITEM_GA3_OVA" identifierref="RES_GA3_OVA">
+        <title>OVA · Lógica y algoritmos con PSeInt y Python</title>
+        <adlcp:masteryscore>70</adlcp:masteryscore>
+      </item>
+    </organization>
+  </organizations>
+  <resources>
+    <resource identifier="RES_GA3_OVA" type="webcontent" adlcp:scormtype="sco" href="index.html">
+      <file href="index.html"/>
+      <file href="css/sena-theme.css"/>
+      <file href="css/components.css"/>
+      <file href="css/accesibilidad.css"/>
+      <file href="js/scorm.js"/>
+      <file href="js/evaluacion.js"/>
+      <file href="js/simuladores.js"/>
+      <file href="js/accesibilidad.js"/>
+      <file href="js/app.js"/>
+      <file href="assets/logos/sena-logo.svg"/>
+      <file href="assets/logos/sena-white.svg"/>
+      <file href="assets/diagramas/d03_descuento_flujo.png"/>
+      <file href="assets/diagramas/d05_ciclo_flujo.png"/>
+      <file href="assets/diagramas/d09_buscar_flujo.png"/>
+      <file href="assets/diagramas/sintesis_algoritmia.svg"/>
+    </resource>
+  </resources>
+</manifest>
